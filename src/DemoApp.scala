@@ -28,79 +28,52 @@ object DemoApp extends SimpleSwingApplication {
     // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
     val icon: ImageIcon = new ImageIcon("img/ant_ninja.png")
     val im = icon.getImage()
-    var imagesPos: List[Point] = Nil
-    var imagesSpeed: List[Point] = Nil
     var Insects: List[Insect] = Nil
+    val nulpoint: Point = new Point(0,0)
+    val onepoint: Point = new Point(1,1)
     /* addImage(): Add a new image to the game state at the specified position */
     def addImage(position: Point) = {
       /* Get the current position of the mouse, and add it to the list of images to draw */
       if (position != null) { // position is null if the mouse is out of the screen
-        imagesPos = position :: imagesPos
-        imagesSpeed = new Point(1, 1) :: imagesSpeed // Initial speed: dx=1;dy=1
+        Insects = new Insect(onepoint, position, icon) :: Insects
       }
     }
     /* update(): gets called 50 times per second to update the game state */
     def update() = {
-      // Array(1,2,3) zip Array('a', 'b', 'c') evaluates to Array((1,'a'), (2,'b'), (3, 'c'))
-      // So the following retrieve the pos and speed of a given sprite. Again, having a class for sprites would be WAYS better
-      for ((pos, speed) <- imagesPos zip imagesSpeed) {
-        /* Apply the change */
-        pos.x += speed.x
-        pos.y += speed.y
-        /* Bump on borders on need */
-        if (pos.y < 0) {
-          pos.y = 0
-          speed.y = -speed.y
-        }
-        if (pos.x < 0) {
-          pos.x = 0
-          speed.x = -speed.x
-        }
-        if (pos.x + icon.getIconWidth() > ui.size.getWidth()) {
-          pos.x = ui.size.getWidth().toInt - icon.getIconWidth()
-          speed.x = -speed.x
-        }
-        if (pos.y + icon.getIconHeight() > ui.size.getHeight()) {
-          pos.y = ui.size.getHeight().toInt - icon.getIconHeight()
-          speed.y = -speed.y
-        }
+      for (ins <- Insects) {
+        ins.update(ui.size.getWidth().toInt, ui.size.getHeight().toInt)
       }
     }
     /* speedIncrease(): changes the speed of every existing sprite */
     def speedIncrease() = {
-      for (pos <- imagesSpeed) {
-        pos.x = if (pos.x == 0) 1 else pos.x * 2
-        pos.y = if (pos.y == 0) 1 else pos.y * 2
+      for (ins <- Insects) {
+        ins.SpeedIncrease(2)
       }
     }
     /* speedDecrease(): changes the speed of every existing sprite */
     def speedDecrease() = {
-      for (pos <- imagesSpeed) {
-        pos.x /= 2
-        pos.y /= 2
+      for (ins <- Insects) {
+        ins.SpeedDecrease(2)
       }
     }
     def removeSpriteAt(click: Point) {
       /* Filter the sprite out. This code is made particularly ugly by the lack of Sprite class :-( */
       var p2: List[Point] = Nil
       var s2: List[Point] = Nil
-      for ((pos, speed) <- imagesPos zip imagesSpeed) {
-        if (pos.x < click.x && click.x < pos.x + icon.getIconWidth() &&
-          pos.y < click.y && click.y < pos.y + icon.getIconHeight()) {
+      var newInsects: List[Insect] = Nil
+      for (ins <- Insects) {
+        if (ins.inSprite (click)) {
           /* this object was clicked. Don't read it */
         } else {
-          p2 = pos :: p2
-          s2 = speed :: s2
+          newInsects = ins :: newInsects
         }
       }
-      imagesPos = p2
-      imagesSpeed = s2
+      Insects = newInsects //better if the function returns the new list?
     }
 
     /* reset(): empties the screen */
     def reset() = {
-      imagesPos = Nil
-      imagesSpeed = Nil
+      Insects = Nil
     }
   }
 
@@ -152,8 +125,8 @@ object DemoApp extends SimpleSwingApplication {
       g.setColor(Color.black)
       g.draw(boxPath)
 
-      for (p <- state.imagesPos) {
-        g.drawImage(state.im, p.x, p.y, peer)
+      for (ins <- state.Insects) {
+        g.drawImage(ins.im, ins.pos.x, ins.pos.y, peer)
       }
     }
   }
