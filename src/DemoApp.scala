@@ -28,9 +28,20 @@ object DemoApp extends SimpleSwingApplication {
     // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
     val icon: ImageIcon = new ImageIcon("img/ant_ninja.png")
     val im = icon.getImage()
+    val tunnel_icon :ImageIcon = new ImageIcon("img/tunnel.png")
+    val tunnel_im = tunnel_icon.getImage()
+    val tun :Int = 8 //number of tunnels
     var Insects: List[Insect] = Nil
     val nulpoint: Point = new Point(0,0)
     val onepoint: Point = new Point(1,1)
+    val Hive = new Place(new Point(0,0), "Hive")
+    val T1 = new Tunnel(new Point(0,200), 1.toString, Hive, tunnel_icon)
+    var Tunnels :List[Tunnel] = Nil
+    Tunnels = T1 :: Tunnels
+    for (a <- 2 to tun) {
+      Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth()*(a-1),200), a.toString, Tunnels.head, tunnel_icon) :: Tunnels
+      //Tunnels = T :: Tunnels
+    }
     /* addImage(): Add a new image to the game state at the specified position */
     def addImage(position: Point) = {
       /* Get the current position of the mouse, and add it to the list of images to draw */
@@ -127,6 +138,9 @@ object DemoApp extends SimpleSwingApplication {
 
       for (ins <- state.Insects) {
         g.drawImage(ins.im, ins.pos.x, ins.pos.y, peer)
+      }
+      for (t <- state.Tunnels) {
+        g.drawImage(t.im ,t.pos.x, t.pos.y, peer)
       }
     }
   }
