@@ -21,67 +21,27 @@ object DemoApp extends SimpleSwingApplication {
   // Part 1: The data describing the state of the game
   ////////////////////////////////////////////////////
 
- 
-  
   object state {
     /* records the images that move on screen */
     // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
-    val icon: ImageIcon = new ImageIcon("img/ant_ninja.png")
-    val im = icon.getImage()
-    val tunnel_icon :ImageIcon = new ImageIcon("img/tunnel.png")
+
+    val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
-    val tun :Int = 8 //number of tunnels
+    val tun: Int = 8 //number of tunnels
     var Insects: List[Insect] = Nil
-    val nulpoint: Point = new Point(0,0)
-    val onepoint: Point = new Point(1,1)
-    val Hive = new Place(new Point(0,0), "Hive")
-    val T1 = new Tunnel(new Point(0,200), 1.toString, Hive, tunnel_icon)
-    var Tunnels :List[Tunnel] = Nil
+
+    val hive = new Hive(Nil)
+    val T1 = new Tunnel(new Point(0, 200), 1.toString, hive, tunnel_icon)
+    var Tunnels: List[Tunnel] = Nil
     Tunnels = T1 :: Tunnels
     for (a <- 2 to tun) {
-      Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth()*(a-1),200), a.toString, Tunnels.head, tunnel_icon) :: Tunnels
-      //Tunnels = T :: Tunnels
-    }
-    /* addImage(): Add a new image to the game state at the specified position */
-    def addImage(position: Point) = {
-      /* Get the current position of the mouse, and add it to the list of images to draw */
-      if (position != null) { // position is null if the mouse is out of the screen
-        Insects = new Insect(onepoint, position, icon) :: Insects
-      }
-    }
-    /* update(): gets called 50 times per second to update the game state */
-    def update() = {
-      for (ins <- Insects) {
-        ins.update(ui.size.getWidth().toInt, ui.size.getHeight().toInt)
-      }
-    }
-    /* speedIncrease(): changes the speed of every existing sprite */
-    def speedIncrease() = {
-      for (ins <- Insects) {
-        ins.SpeedIncrease(2)
-      }
-    }
-    /* speedDecrease(): changes the speed of every existing sprite */
-    def speedDecrease() = {
-      for (ins <- Insects) {
-        ins.SpeedDecrease(2)
-      }
-    }
-    def removeSpriteAt(click: Point) {
-      /* Filter the sprite out. This code is made particularly ugly by the lack of Sprite class :-( */
-      var p2: List[Point] = Nil
-      var s2: List[Point] = Nil
-      var newInsects: List[Insect] = Nil
-      for (ins <- Insects) {
-        if (ins.inSprite (click)) {
-          /* this object was clicked. Don't read it */
-        } else {
-          newInsects = ins :: newInsects
-        }
-      }
-      Insects = newInsects //better if the function returns the new list?
-    }
+      Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth() * (a - 1), 200), a.toString, Tunnels.head, tunnel_icon) :: Tunnels
 
+    }
+    val purse = new Purse(0)
+    def update() = {
+      if (purse.money < 100000) { purse.money += 1 }
+    }
     /* reset(): empties the screen */
     def reset() = {
       Insects = Nil
@@ -101,14 +61,14 @@ object DemoApp extends SimpleSwingApplication {
 
     reactions += {
       case e: MousePressed =>
-        state.removeSpriteAt(e.point)
+        //state.removeSpriteAt(e.point)
         requestFocusInWindow()
       case e: MouseDragged        => /* Nothing for now */
       case e: MouseReleased       => /* Nothing for now */
       case KeyTyped(_, 'c', _, _) => state.reset()
-      case KeyTyped(_, 'i', _, _) => state.addImage(getPos())
-      case KeyTyped(_, 'a', _, _) => state.speedIncrease()
-      case KeyTyped(_, 'z', _, _) => state.speedDecrease()
+      //case KeyTyped(_, 'i', _, _) => state.addImage(getPos())
+      //case KeyTyped(_, 'a', _, _) => state.speedIncrease()
+      //case KeyTyped(_, 'z', _, _) => state.speedDecrease()
 
       case _: FocusLost           => repaint()
     }
@@ -131,7 +91,7 @@ object DemoApp extends SimpleSwingApplication {
       g.drawString(" Press 'i' to add sprites, 'c' to remove them all. Click on sprite to destroy them", 10, size.height - 10)
       val pos = getPos()
       if (pos != null)
-        g.drawString("x: " + pos.x + " y: " + pos.y, size.width - 85, 15)
+        g.drawString("x: " + pos.x + " y: " + pos.y + state.purse.money, size.width - 85, 15)
 
       g.setColor(Color.black)
       g.draw(boxPath)
@@ -140,7 +100,7 @@ object DemoApp extends SimpleSwingApplication {
         g.drawImage(ins.im, ins.pos.x, ins.pos.y, peer)
       }
       for (t <- state.Tunnels) {
-        g.drawImage(t.im ,t.pos.x, t.pos.y, peer)
+        g.drawImage(t.im, t.pos.x, t.pos.y, peer)
       }
     }
   }
