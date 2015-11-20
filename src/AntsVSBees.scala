@@ -23,7 +23,7 @@ object AntsBees extends SimpleSwingApplication {
 
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
-    val tun: Int = 8 //number of tunnels
+    val tun: Int = 8 //number of tunnel places
     var Insects: List[Insect] = Nil
 
     val hive = new Hive(Nil)
