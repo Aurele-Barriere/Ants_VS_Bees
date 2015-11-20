@@ -12,7 +12,7 @@ import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
 import javax.swing.{ ImageIcon, Timer }
 
 // That object is your application
-object DemoApp extends SimpleSwingApplication {
+object AntsBees extends SimpleSwingApplication {
 
   // Part 1: The data describing the state of the game
   ////////////////////////////////////////////////////

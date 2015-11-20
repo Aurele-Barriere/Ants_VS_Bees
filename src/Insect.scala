@@ -32,6 +32,9 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
 abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) extends Insect(p, ico, arm) {
   val location: Tunnel = lo
   val cost: Int = co
+  def attack() = {
+    
+  }
 }
 
 
@@ -43,11 +46,15 @@ class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png")
 // Basic Units
 
 class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2, lo) {
-  
+  override def attack () = {AntsBees.state.purse.add_money(1)}
 }
 
 class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2, lo) {
-
+  override def attack () = {
+    for (b <-this.location.bees) {
+      b.armor -= 1
+    }
+  }
 }
 
 class Short(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
@@ -57,7 +64,7 @@ class Short(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthr
 class Long(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
 
 }
-<<<<<<< HEAD
+
 
 // Gimmicky ants
 
@@ -92,7 +99,3 @@ class Queen(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.pn
 
 }
 
-// we need to do more classes of ants
-=======
-//we need to do more classes of ants
->>>>>>> 83835c23b656b3860900c360220fce9793313963
