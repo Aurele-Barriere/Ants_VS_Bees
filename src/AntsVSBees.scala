@@ -27,20 +27,20 @@ object AntsBees extends SimpleSwingApplication {
     var Insects: List[Insect] = Nil
     //Defining Cells :
     val nulpoint = new Point(0,0)
-    val abstracthive = new Hive(Nil) //this isn't good!
-    val abstracttunnel = new Tunnel(nulpoint, "a", abstracthive, tunnel_icon)
-    val cell_harvest = new CellAnt (new Point(100,400), "harvest", new Harvester(nulpoint, abstracttunnel ))
-    val cell_thrower = new CellAnt (new Point(200,400), "thrower", new Thrower(nulpoint, abstracttunnel ))
+    //val abstracthive = new Hive(Nil) //this isn't good!
+    //val abstracttunnel = new Tunnel(nulpoint, "a", abstracthive, tunnel_icon)
+    //val cell_harvest = new CellAnt (new Point(100,400), new Harvester(nulpoint, abstracttunnel ))
+    //val cell_thrower = new CellAnt (new Point(200,400), new Thrower(nulpoint, abstracttunnel ))
     
-    val bye = new Bye (new Point(300,400), "bye")
-    val hive = new Hive(List(cell_harvest, cell_thrower, bye))
-    val T1 = new Tunnel(new Point(0, 200), 1.toString, hive, tunnel_icon)
+    //val bye = new Bye (new Point(300,400))
+    val hive = new Hive(Nil)
+    val T1 = new Tunnel(new Point(0, 200), hive, tunnel_icon)
     var Tunnels: List[Tunnel] = Nil
     Tunnels = T1 :: Tunnels
     for (a <- 2 to tun) {
-      Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth() * (a - 1), 200), a.toString, Tunnels.head, tunnel_icon) :: Tunnels
+      Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth() * (a - 1), 200), Tunnels.head, tunnel_icon) :: Tunnels
     }
-    val entrance = new Entrance(new Point (500,500), "entrance", Tunnels.head)
+    val entrance = new Entrance(new Point (500,500), Tunnels.head)
     val purse = new Purse(0)
     def update() = {
       if (purse.money < 100000) { purse.money += 1 }

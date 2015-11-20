@@ -3,12 +3,12 @@
 import java.awt.Point
 import javax.swing.ImageIcon
 
-class Place(p: Point, n: String) {
+class Place(p: Point) {
   val pos: Point = p
-  val name: String = n
+  //val name: String = n
 }
 
-class Tunnel(p: Point, n: String, ex: Place, ico: ImageIcon) extends Place(p, n) {
+class Tunnel(p: Point, ex: Place, ico: ImageIcon) extends Place(p) {
   val exit: Place = ex
 
   var typeant: Ant = new None(this)
@@ -48,17 +48,17 @@ class Tunnel(p: Point, n: String, ex: Place, ico: ImageIcon) extends Place(p, n)
   }
 }
  
-class Cell(p: Point, n: String) extends Place(p, n) {
+class Cell(p: Point) extends Place(p) {
   var is_selected: Boolean = false
 }
 
-class Bye(p: Point, n: String) extends Cell(p, n) {
+class Bye(p: Point) extends Cell(p) {
   def erase(tun: Tunnel) = {
     tun.typeant = new None(tun)
   }
 }
 
-class CellAnt(p: Point, n: String, t: Ant) extends Cell(p, n) {
+class CellAnt(p: Point, t: Ant) extends Cell(p) {
   val typeant: Ant = t
 
   def buy_ant(p: Purse, tun: Tunnel) = {
@@ -71,7 +71,7 @@ class CellAnt(p: Point, n: String, t: Ant) extends Cell(p, n) {
   }
 }
 
-class Hive(L: List[Cell]) extends Place(new Point(0, 0), "Hive") {
+class Hive(L: List[Cell]) extends Place(new Point(0, 0)) {
   val Cells: List[Cell] = L
   def select(c: Cell) {
     for (cell <- Cells) {
@@ -81,7 +81,7 @@ class Hive(L: List[Cell]) extends Place(new Point(0, 0), "Hive") {
   }
 }
 
-class Entrance(p: Point, n: String, t: Tunnel) extends Place(p, n) {
+class Entrance(p: Point, t: Tunnel) extends Place(p) {
   val exit: Tunnel = t
   val bees: List[Bee] = Nil
 
