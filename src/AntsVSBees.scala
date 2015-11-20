@@ -3,7 +3,6 @@
 // Compile with: scalac -cp scala-swing.jar:. FirstTest.scala
 // Then execute with: scala -cp scala-swing.jar:. FirstTest
 
-
 import scala.swing._
 import scala.swing.{ SimpleSwingApplication, MainFrame, Panel }
 import scala.swing.event._
@@ -18,30 +17,33 @@ object AntsBees extends SimpleSwingApplication {
   ////////////////////////////////////////////////////
 
   object state {
-    /* records the images that move on screen */
-    // This is a (ugly) set of sprites that are animated on screen. A set of objects would be *much* better
 
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
     val tun: Int = 8 //number of tunnel places
     var Insects: List[Insect] = Nil
     //Defining Cells :
-    val nulpoint = new Point(0,0)
-    //val abstracthive = new Hive(Nil) //this isn't good!
-    //val abstracttunnel = new Tunnel(nulpoint, "a", abstracthive, tunnel_icon)
-    //val cell_harvest = new CellAnt (new Point(100,400), new Harvester(nulpoint, abstracttunnel ))
-    //val cell_thrower = new CellAnt (new Point(200,400), new Thrower(nulpoint, abstracttunnel ))
-    
-    //val bye = new Bye (new Point(300,400))
-    val hive = new Hive(Nil)
-    //val T1 = new Tunnel(new Point(0, 200), hive, tunnel_icon)
-    var Tunnels: List[Tunnel] = Nil
-    //Tunnels = T1 :: Tunnels
-    /*for (a <- 2 to tun) {
-      Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth() * (a - 1), 200), Tunnels.head, tunnel_icon) :: Tunnels
-    }
-    val entrance = new Entrance(new Point (500,500), Tunnels.head)
-    */
+    val nulpoint = new Point(0, 0)
+
+    val hive = new Hive(C, t1: Tunnel)
+    val width = tunnel_icon.getIconWidth()
+    val alt = 200 //where is the tunnel on the y-axis
+    val t0: Tunnel = new Tunnel(nulpoint, null, null, tunnel_icon) //just a place to put the insects in the hive
+    val t1: Tunnel = new Tunnel(new Point(0, alt), hive, t2, tunnel_icon)
+    val t2: Tunnel = new Tunnel(new Point(width, alt), hive, t3, tunnel_icon)
+    val t3: Tunnel = new Tunnel(new Point(2 * width, alt), hive, t4, tunnel_icon)
+    val t4: Tunnel = new Tunnel(new Point(3 * width, alt), hive, t5, tunnel_icon)
+    val t5: Tunnel = new Tunnel(new Point(4 * width, alt), hive, t6, tunnel_icon)
+    val t6: Tunnel = new Tunnel(new Point(5 * width, alt), hive, t7, tunnel_icon)
+    val t7: Tunnel = new Tunnel(new Point(6 * width, alt), hive, t8, tunnel_icon)
+    val t8: Tunnel = new Tunnel(new Point(7 * width, alt), hive, entrance, tunnel_icon)
+    val entrance = new Entrance(new Point(8 * width, alt), t8)
+    val harvester = new CellAnt(new Point(100, 400), new Harvester(nulpoint, t0))
+    val thrower = new CellAnt(new Point(200, 400), new Thrower(nulpoint, t0))
+    val bye = new Bye(new Point(300, 400))
+    val C: List[Cell] = List(harvester, thrower, bye)
+    var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
+
     val purse = new Purse(0)
     def update() = {
       if (purse.money < 100000) { purse.money += 1 } //call the turns
@@ -81,7 +83,6 @@ object AntsBees extends SimpleSwingApplication {
     def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
 
     /* A nice box */
-    
 
     /* How to draw the screen when instructed to do so */
     override def paintComponent(g: Graphics2D) = {
@@ -103,18 +104,18 @@ object AntsBees extends SimpleSwingApplication {
       }
       for (c <- state.hive.Cells) {
         c match {
-          case a:CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
-          case b:Bye => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
+          case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
+          case b: Bye     => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
         }
         if (true) {
           val boxPath = new geom.GeneralPath
-          boxPath .moveTo(c.pos.x, c.pos.y)
-          boxPath.lineTo(c.pos.x+100, c.pos.y)
-          boxPath.lineTo(c.pos.x+100, c.pos.y+100)
-          boxPath.lineTo(c.pos.x, c.pos.y+100)
-          boxPath.lineTo(c.pos.x, c.pos.y) 
+          boxPath.moveTo(c.pos.x, c.pos.y)
+          boxPath.lineTo(c.pos.x + 100, c.pos.y)
+          boxPath.lineTo(c.pos.x + 100, c.pos.y + 100)
+          boxPath.lineTo(c.pos.x, c.pos.y + 100)
+          boxPath.lineTo(c.pos.x, c.pos.y)
           g.draw(boxPath)
-          
+
         }
       }
     }

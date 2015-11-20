@@ -31,28 +31,31 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     }
   }
 
-  /*def left_neighbour(n: Int): Place = {
+  def left_neighbour(n: Int): Place = {
     n match {
       case 0 => return this
       case m: Int => this.exit match {
-        case t: Tunnel => return t.left_neighbour(m - 1: Int)
-        case h: Hive   => return h
+        case h:Hive => return h
+        case t:Tunnel => return t.left_neighbour(m-1)
       }
     }
   }
-  def right_neighbour(n: Int, l: List[Tunnel]): Place = {
-    for (t: Tunnel <- l: List[Tunnel]) {
-      if (t.left_neighbour(n) == this) { return t }
+  def right_neighbour(n: Int): Place = {
+    n match {
+      case 0 => return this
+      case m :Int => this.entrance match {
+        case e: Entrance => return e
+        case t: Tunnel => return t.right_neighbour(m-1)
+      }
     }
-    return this
-  }*/
+  }
 }
 
 class Cell(p: Point) extends Place(p) {
   var is_selected: Boolean = false
 }
 
-class Bye(p: Point) extends Cell(p) {
+class Bye(p : Point) extends Cell(p) {
   def erase(tun: Tunnel) = {
     tun.typeant = new None(tun)
   }
@@ -71,8 +74,9 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   }
 }
 
-class Hive(L: List[Cell]) extends Place(new Point(0, 0)) {
-  val Cells: List[Cell] = L
+class Hive(L: List[Cell], t: Tunnel) extends Place(new Point(0, 0)) {
+  lazy val entrance: Tunnel = t
+  lazy val Cells: List[Cell] = L
   def select(c: Cell) {
     for (cell <- Cells) {
       cell.is_selected = false
@@ -82,7 +86,7 @@ class Hive(L: List[Cell]) extends Place(new Point(0, 0)) {
 }
 
 class Entrance(p: Point, t: Tunnel) extends Place(p) {
-  val exit: Tunnel = t
+  lazy val exit: Tunnel = t
   val bees: List[Bee] = Nil
 
 }
