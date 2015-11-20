@@ -57,6 +57,7 @@ class Short(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthr
 class Long(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
 
 }
+<<<<<<< HEAD
 
 // Gimmicky ants
 
@@ -92,3 +93,6 @@ class Queen(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.pn
 }
 
 // we need to do more classes of ants
+=======
+//we need to do more classes of ants
+>>>>>>> 83835c23b656b3860900c360220fce9793313963

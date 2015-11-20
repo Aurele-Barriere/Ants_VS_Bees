@@ -30,11 +30,36 @@ class Tunnel(p: Point, n: String, ex: Place, ico: ImageIcon) extends Place(p, n)
       case n: None => typeant = t
     }
   }
+
+  def left_neighbour(n: Int):Place = {
+    n match {
+      case 0 => return this
+      case m: Int => this.exit match {
+        case t: Tunnel => return  t.left_neighbour(m - 1: Int)
+        case h: Hive   => return h
+      }
+    }
+  }
+  def right_neighbour(n: Int, l: List[Tunnel]) :Place = {
+    for (t:Tunnel <- l:List[Tunnel]) {
+      if (t.left_neighbour(n) == this) { return t}
+    }
+    return this
+  }
 }
 
-class Cell(p: Point, n: String, t: Ant) extends Place(p, n) {
-  val typeant: Ant = t
+class Cell(p: Point, n: String) extends Place(p, n) {
   var is_selected: Boolean = false
+}
+
+class Bye(p: Point, n: String) extends Cell(p, n) {
+  def erase(tun: Tunnel) = {
+    tun.typeant = new None(tun)
+  }
+}
+
+class CellAnt(p: Point, n: String, t: Ant) extends Cell(p, n) {
+  val typeant: Ant = t
 
   def buy_ant(p: Purse, tun: Tunnel) = {
     tun.typeant match {
