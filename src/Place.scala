@@ -47,7 +47,7 @@ class Tunnel(p: Point, n: String, ex: Place, ico: ImageIcon) extends Place(p, n)
     return this
   }
 }
-
+ 
 class Cell(p: Point, n: String) extends Place(p, n) {
   var is_selected: Boolean = false
 }

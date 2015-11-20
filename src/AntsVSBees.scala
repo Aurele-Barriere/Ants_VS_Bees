@@ -25,8 +25,15 @@ object AntsBees extends SimpleSwingApplication {
     val tunnel_im = tunnel_icon.getImage()
     val tun: Int = 8 //number of tunnels
     var Insects: List[Insect] = Nil
-
-    val hive = new Hive(Nil)
+    //Defining Cells :
+    val nulpoint = new Point(0,0)
+    val abstracthive = new Hive(Nil) //this isn't good!
+    val abstracttunnel = new Tunnel(nulpoint, "a", abstracthive, tunnel_icon)
+    val cell_harvest = new CellAnt (new Point(100,400), "harvest", new Harvester(nulpoint, abstracttunnel ))
+    val cell_thrower = new CellAnt (new Point(200,400), "thrower", new Thrower(nulpoint, abstracttunnel ))
+    
+    val bye = new Bye (new Point(300,400), "bye")
+    val hive = new Hive(List(cell_harvest, cell_thrower, bye))
     val T1 = new Tunnel(new Point(0, 200), 1.toString, hive, tunnel_icon)
     var Tunnels: List[Tunnel] = Nil
     Tunnels = T1 :: Tunnels
@@ -73,30 +80,41 @@ object AntsBees extends SimpleSwingApplication {
     def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
 
     /* A nice box */
-    val boxPath = new geom.GeneralPath
-    boxPath.moveTo(10, 100)
-    boxPath.lineTo(10, 10)
-    boxPath.lineTo(110, 10)
-    boxPath.lineTo(110, 100)
-    boxPath.lineTo(10, 100)
+    
 
     /* How to draw the screen when instructed to do so */
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       g.setColor(new Color(100, 100, 100))
-      g.drawString(" Press 'i' to add sprites, 'c' to remove them all. Click on sprite to destroy them", 10, size.height - 10)
+      //g.drawString(" Press 'i' to add sprites, 'c' to remove them all. Click on sprite to destroy them", 10, size.height - 10)
       val pos = getPos()
       if (pos != null)
         g.drawString("x: " + pos.x + " y: " + pos.y + state.purse.money, size.width - 85, 15)
 
       g.setColor(Color.black)
-      g.draw(boxPath)
+      //g.draw(boxPath)
 
       for (ins <- state.Insects) {
         g.drawImage(ins.im, ins.pos.x, ins.pos.y, peer)
       }
       for (t <- state.Tunnels) {
         g.drawImage(t.im, t.pos.x, t.pos.y, peer)
+      }
+      for (c <- state.hive.Cells) {
+        c match {
+          case a:CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
+          case b:Bye => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
+        }
+        if (true) {
+          val boxPath = new geom.GeneralPath
+          boxPath .moveTo(c.pos.x, c.pos.y)
+          boxPath.lineTo(c.pos.x+100, c.pos.y)
+          boxPath.lineTo(c.pos.x+100, c.pos.y+100)
+          boxPath.lineTo(c.pos.x, c.pos.y+100)
+          boxPath.lineTo(c.pos.x, c.pos.y) 
+          g.draw(boxPath)
+          
+        }
       }
     }
   }
@@ -124,7 +142,7 @@ object AntsBees extends SimpleSwingApplication {
   // Part 4: Main initialization: Create a new window and populate it
   //////////////////////////////
   def top = new MainFrame {
-    title = "Simple Demo Application"
+    title = "Ants VS Bees"
     contents = ui
   }
 }
