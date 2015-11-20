@@ -47,44 +47,32 @@ class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harv
   override def attack() = { AntsBees.state.purse.add_money(1) }
 }
 
-object Foundbee extends Exception {}
 
 class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2, lo) {
-  /*override def attack () = {
-    try { 
-      for (i <- 0 to AntsBees.state.tun) {
-        val p = this.location.right_neighbour(i, AntsBees.state.Tunnels)
-        p  match {
-          case t:Tunnel => if (t.bees == Nil) {
-          } else {
-          t.bees.head.armor -= 1
-          throw Foundbee
-          }
-        }
+  def attacking (pl : Tunnel) :Unit = {
+    pl.entrance match {
+      case t:Tunnel => t.bees match {
+        case Nil => this.attacking(t)
+        case l:List[Bee] => l.head.armor -= 1
       }
-    } catch {
-      case Foundbee => 
     }
-  } */
+  }
+  override def attack() = {attacking (this.location)}
 }
 
 class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
-  /*override def attack () = {
-    try { 
-      for (i <- 0 to 2) {
-        val p = this.location.right_neighbour(i, AntsBees.state.Tunnels)
-        p  match {
-          case t:Tunnel => if (t.bees == Nil) {
-          } else {
-          t.bees.head.armor -= 1
-          throw Foundbee
-          }
+  val range :Int = 2
+  def attacking(pl :Place, n :Int) :Unit= {
+    if (n>0) {
+      pl match {
+        case t :Tunnel => t.bees match {
+          case Nil => attacking (t.entrance, n-1)
+          case l :List[Bee] => l.head.armor -= 1
         }
       }
-    } catch {
-      case Foundbee => 
     }
-  } */
+  }
+  override def attack() = {attacking(this.location, range)}
 }
 
 class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
