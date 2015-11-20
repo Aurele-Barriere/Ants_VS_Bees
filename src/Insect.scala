@@ -27,19 +27,68 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
   }
 }
 
+// Ants
+
 abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) extends Insect(p, ico, arm) {
   val location: Tunnel = lo
   val cost: Int = co
 }
 
-class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png"), 100, 0, lo) {}
 
-class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
-
+class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png"), 100, 0, lo) {
+  
 }
 
 
-class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
+// Basic Units
+
+class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2, lo) {
+  
+}
+
+class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2, lo) {
 
 }
-/we need to do more classes of ants
+
+class Short(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
+
+}
+
+class Long(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
+
+}
+
+// Gimmicky ants
+
+class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 5, 3, lo) {
+
+}
+
+class Scuba(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 5, 1, lo) {
+
+}
+
+class Wall(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4, lo) {
+
+}
+
+class Ninja(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 6, 1, lo) {
+
+}
+
+class Hungry(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 4, 1, lo) {
+
+}
+
+// Bodyguard Ant currently has no sprite, thrower spite used as placeholder
+class Bodyguard(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 4, 2, lo) {
+
+}
+
+// Here comes the queen
+
+class Queen(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 6, 2, lo) {
+
+}
+
+// we need to do more classes of ants
