@@ -3,10 +3,6 @@
 // Compile with: scalac -cp scala-swing.jar:. FirstTest.scala
 // Then execute with: scala -cp scala-swing.jar:. FirstTest
 
-// Usage:
-//   - 'i' to add a moving sprite under the mouse
-//   - 'a'/'z' to increase/decrease the speed of every moving objects 
-//   - 'c' to clear the state (and thus the screen)
 
 import scala.swing._
 import scala.swing.{ SimpleSwingApplication, MainFrame, Panel }
@@ -36,8 +32,8 @@ object DemoApp extends SimpleSwingApplication {
     Tunnels = T1 :: Tunnels
     for (a <- 2 to tun) {
       Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth() * (a - 1), 200), a.toString, Tunnels.head, tunnel_icon) :: Tunnels
-
     }
+    val entrance = new Entrance(new Point (500,500), "entrance", Tunnels.head)
     val purse = new Purse(0)
     def update() = {
       if (purse.money < 100000) { purse.money += 1 }
