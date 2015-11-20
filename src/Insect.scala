@@ -38,4 +38,8 @@ class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_
 
 }
 
-//we need to do more classes of ants
+
+class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
+
+}
+/we need to do more classes of ants
