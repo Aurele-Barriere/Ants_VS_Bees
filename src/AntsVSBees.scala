@@ -102,7 +102,7 @@ object AntsBees extends SimpleSwingApplication {
       for (t <- state.Tunnels) {
         g.drawImage(t.im, t.pos.x, t.pos.y, peer)
       }
-      for (c <- state.hive.Cells) {
+      for (c <- state.C) {
         c match {
           case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
           case b: Bye     => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
@@ -115,9 +115,9 @@ object AntsBees extends SimpleSwingApplication {
           boxPath.lineTo(c.pos.x, c.pos.y + 100)
           boxPath.lineTo(c.pos.x, c.pos.y)
           g.draw(boxPath)
-
         }
       }
+      
     }
   }
 
