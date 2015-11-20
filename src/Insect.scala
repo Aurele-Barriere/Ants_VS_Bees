@@ -49,20 +49,63 @@ class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harv
   override def attack () = {AntsBees.state.purse.add_money(1)}
 }
 
+object Foundbee extends Exception { }
+
 class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2, lo) {
   override def attack () = {
-    for (b <-this.location.bees) {
-      b.armor -= 1
+    try { 
+      for (i <- 0 to AntsBees.state.tun) {
+        val p = this.location.right_neighbour(i, AntsBees.state.Tunnels)
+        p  match {
+          case t:Tunnel => if (t.bees == Nil) {
+          } else {
+          t.bees.head.armor -= 1
+          throw Foundbee
+          }
+        }
+      }
+    } catch {
+      case Foundbee => 
     }
-  }
+  } 
 }
 
-class Short(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
-
+class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
+  override def attack () = {
+    try { 
+      for (i <- 0 to 2) {
+        val p = this.location.right_neighbour(i, AntsBees.state.Tunnels)
+        p  match {
+          case t:Tunnel => if (t.bees == Nil) {
+          } else {
+          t.bees.head.armor -= 1
+          throw Foundbee
+          }
+        }
+      }
+    } catch {
+      case Foundbee => 
+    }
+  }    
 }
 
-class Long(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
-
+class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
+  override def attack () = {
+    try { 
+      for (i <- 3 to AntsBees.state.tun) {
+        val p = this.location.right_neighbour(i, AntsBees.state.Tunnels)
+        p  match {
+          case t:Tunnel => if (t.bees == Nil) {
+          } else {
+          t.bees.head.armor -= 1
+          throw Foundbee
+          }
+        }
+      }
+    } catch {
+      case Foundbee => 
+    }
+  } 
 }
 
 
