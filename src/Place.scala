@@ -8,9 +8,9 @@ class Place(p: Point) {
   //val name: String = n
 }
 
-class Tunnel(p: Point, ex: Place, ico: ImageIcon) extends Place(p) {
-  val exit: Place = ex
-
+class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
+  lazy val exit: Place = ex
+  lazy val entrance: Place = en
   var typeant: Ant = new None(this)
   var bees: List[Bee] = Nil
   val icon: ImageIcon = ico
@@ -31,23 +31,23 @@ class Tunnel(p: Point, ex: Place, ico: ImageIcon) extends Place(p) {
     }
   }
 
-  def left_neighbour(n: Int):Place = {
+  /*def left_neighbour(n: Int): Place = {
     n match {
       case 0 => return this
       case m: Int => this.exit match {
-        case t: Tunnel => return  t.left_neighbour(m - 1: Int)
+        case t: Tunnel => return t.left_neighbour(m - 1: Int)
         case h: Hive   => return h
       }
     }
   }
-  def right_neighbour(n: Int, l: List[Tunnel]) :Place = {
-    for (t:Tunnel <- l:List[Tunnel]) {
-      if (t.left_neighbour(n) == this) { return t}
+  def right_neighbour(n: Int, l: List[Tunnel]): Place = {
+    for (t: Tunnel <- l: List[Tunnel]) {
+      if (t.left_neighbour(n) == this) { return t }
     }
     return this
-  }
+  }*/
 }
- 
+
 class Cell(p: Point) extends Place(p) {
   var is_selected: Boolean = false
 }

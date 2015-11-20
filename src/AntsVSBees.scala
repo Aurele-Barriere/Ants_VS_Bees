@@ -34,16 +34,17 @@ object AntsBees extends SimpleSwingApplication {
     
     //val bye = new Bye (new Point(300,400))
     val hive = new Hive(Nil)
-    val T1 = new Tunnel(new Point(0, 200), hive, tunnel_icon)
+    //val T1 = new Tunnel(new Point(0, 200), hive, tunnel_icon)
     var Tunnels: List[Tunnel] = Nil
-    Tunnels = T1 :: Tunnels
-    for (a <- 2 to tun) {
+    //Tunnels = T1 :: Tunnels
+    /*for (a <- 2 to tun) {
       Tunnels = new Tunnel(new Point(tunnel_icon.getIconWidth() * (a - 1), 200), Tunnels.head, tunnel_icon) :: Tunnels
     }
     val entrance = new Entrance(new Point (500,500), Tunnels.head)
+    */
     val purse = new Purse(0)
     def update() = {
-      if (purse.money < 100000) { purse.money += 1 }
+      if (purse.money < 100000) { purse.money += 1 } //call the turns
     }
     /* reset(): empties the screen */
     def reset() = {
