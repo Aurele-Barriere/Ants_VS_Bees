@@ -49,11 +49,12 @@ class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harv
 
 
 class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2, lo) {
+  val damage:Int = 1
   def attacking (pl : Tunnel) :Unit = {
     pl.entrance match {
       case t:Tunnel => t.bees match {
         case Nil => this.attacking(t)
-        case l:List[Bee] => l.head.armor -= 1
+        case l:List[Bee] => l.head.armor -= damage
       }
     }
   }
@@ -61,13 +62,14 @@ class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_throwe
 }
 
 class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
+  val damage:Int = 1
   val range :Int = 2
   def attacking(pl :Place, n :Int) :Unit= {
     if (n>0) {
       pl match {
         case t :Tunnel => t.bees match {
           case Nil => attacking (t.entrance, n-1)
-          case l :List[Bee] => l.head.armor -= 1
+          case l :List[Bee] => l.head.armor -= damage
         }
       }
     }
@@ -76,28 +78,41 @@ class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_
 }
 
 class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
-  /*override def attack () = {
-    try { 
-      for (i <- 3 to AntsBees.state.tun) {
-        val p = this.location.right_neighbour(i, AntsBees.state.Tunnels)
-        p  match {
-          case t:Tunnel => if (t.bees == Nil) {
-          } else {
-          t.bees.head.armor -= 1
-          throw Foundbee
-          }
-        }
+  val damage:Int = 1
+  val deadrange :Int = 3
+  def attacking (pl : Tunnel) :Unit = {
+    pl.entrance match {
+      case t:Tunnel => t.bees match {
+        case Nil => this.attacking(t)
+        case l:List[Bee] => l.head.armor -= damage
       }
-    } catch {
-      case Foundbee => 
     }
-  } */
+  }
+  //We first need to jump over the dead space
+  def charging (pl : Tunnel, n : Int) :Unit = {
+    if (n>0) {
+      charging(pl,n-1)
+    } else {
+      attacking(pl)
+    }
+  }
+  override def attack() = {charging(this.location, deadrange)}
 }
 
 // Gimmicky ants
 
 class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 5, 3, lo) {
-
+  val damage:Int = 3
+  def reduceArmor() : Unit= {
+    if (this.armor < 1) {
+      for (b <- this.location.bees) {
+        b.armor -= damage
+      }
+    }
+  }
+  override def attack() : Unit = {
+    reduceArmor ()
+  }
 }
 
 class Scuba(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 5, 1, lo) {
