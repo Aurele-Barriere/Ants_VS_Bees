@@ -18,7 +18,6 @@ class Insect(p: Point, ico: ImageIcon, arm: Int) {
 }
 
 class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
-
   var location: Place = lo
   def move() = {
     location match {
@@ -32,6 +31,7 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
 abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) extends Insect(p, ico, arm) {
   val location: Tunnel = lo
   val cost: Int = co
+  val blocksPath = true
   def attack() = {
 
   }
@@ -124,11 +124,36 @@ class Wall(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"
 }
 
 class Ninja(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 6, 1, lo) {
-
+  override val blocksPath = false
+  val damage = 1
+  override def attack() : Unit= {
+    for (b <- this.location.bees) {
+      b.armor -= damage
+    }
+  }
 }
 
 class Hungry(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 4, 1, lo) {
-
+  var digesting = 0
+  val damage = 0
+  def eat(): Unit = {
+    if (this.location.bees != Nil) {
+      this.location.bees.head.armor = 0
+      this digesting = 3
+    }
+  }
+  def digest(): Unit = {
+    if (this.digesting > 0) {
+      this.digesting -= 1
+    }
+  }
+  override def attack():Unit = {
+    if (this.digesting == 0) {
+      eat()
+    } else {
+      digest()
+    }
+  }
 }
 
 // Bodyguard Ant currently has no sprite, thrower spite used as placeholder
