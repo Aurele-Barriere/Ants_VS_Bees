@@ -9,6 +9,7 @@ class Insect(p: Point, ico: ImageIcon, arm: Int) {
   val im = icon.getImage()
   val width: Int = icon.getIconWidth()
   val height: Int = icon.getIconHeight()
+  val watersafe = true
   var armor: Int = arm //when goes down to 0, the insect dies :'(
 
   def inSprite(p: Point) = { //returns true if a given point is in the sprite
@@ -18,6 +19,7 @@ class Insect(p: Point, ico: ImageIcon, arm: Int) {
 }
 
 class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
+  override val watersafe = true
   var location: Place = lo
   def move() = {
     location match {
@@ -31,14 +33,14 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
 abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) extends Insect(p, ico, arm) {
   val location: Tunnel = lo
   val cost: Int = co
-  val blocksPath = true
+  val blocksPath = true 
   def attack() = {
 
   }
 }
 
 class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png"), 100, 0, lo) {
-
+  override val watersafe = true // Would be problematic if empty cases ended up drowning
 }
 
 // Basic Units
@@ -101,7 +103,7 @@ class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_l
 
 // Gimmicky ants
 
-class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 5, 3, lo) {
+class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 5, 3, lo) {
   val damage:Int = 3
   def reduceArmor() : Unit= {
     if (this.armor < 1) {
@@ -116,7 +118,7 @@ class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.p
 }
 
 class Scuba(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 5, 1, lo) {
-
+  override val watersafe =true
 }
 
 class Wall(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4, lo) {
@@ -164,6 +166,6 @@ class Bodyguard(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thro
 // Here comes the queen
 
 class Queen(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 6, 2, lo) {
-
+  override val watersafe = true
 }
 

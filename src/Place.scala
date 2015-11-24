@@ -5,7 +5,6 @@ import javax.swing.ImageIcon
 
 class Place(p: Point) {
   val pos: Point = p
-  //val name: String = n
 }
 
 class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
