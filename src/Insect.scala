@@ -23,7 +23,12 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
   var location: Place = lo
   def move() = {
     location match {
-      case t: Tunnel => t.removebee(this)
+      case t: Tunnel => {t.removebee(this)
+                         t.exit match {
+        case  s : Tunnel => s.addbee(this) 
+        case h : Hive => AntsBees.state.lost = true}
+      }
+      
     }
   }
 }

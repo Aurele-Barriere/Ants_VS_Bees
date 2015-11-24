@@ -17,7 +17,7 @@ object AntsBees extends SimpleSwingApplication {
   ////////////////////////////////////////////////////
 
   object state {
-
+    var lost :Boolean = false //have we lost the game?
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
     val tun: Int = 8 //number of tunnel places
@@ -49,7 +49,7 @@ object AntsBees extends SimpleSwingApplication {
     val ninja = new CellAnt(new Point(50, 150), new Ninja(nulpoint, t0))
     val hungry = new CellAnt(new Point(150, 150), new Hungry(nulpoint, t0))
     val bodyguard = new CellAnt(new Point(250, 150), new Bodyguard(nulpoint, t0))
-    val queen = new CellAnt(new Point(450, 350), new Queen(nulpoint, t0))
+    val queen = new CellAnt(new Point(350, 150), new Queen(nulpoint, t0))
     val bye = new Bye(new Point(450, 150))
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
     var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
@@ -117,7 +117,7 @@ object AntsBees extends SimpleSwingApplication {
           case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
           case b: Bye     => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
         }
-        if (true) {
+        if (c.is_selected) {
           val boxPath = new geom.GeneralPath
           boxPath.moveTo(c.pos.x, c.pos.y)
           boxPath.lineTo(c.pos.x + 100, c.pos.y)

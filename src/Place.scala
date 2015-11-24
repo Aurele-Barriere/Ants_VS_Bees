@@ -67,7 +67,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
     tun.typeant match {
       case n: None => if (p.money >= this.typeant.cost) {
         p.take_money(this.typeant.cost)
-        tun.typeant = this.typeant
+        //tun.typeant = new this.typeant (new Point(0,0), tun) // we need a way to make a copy.
       }
     }
   }
