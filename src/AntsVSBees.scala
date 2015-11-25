@@ -25,7 +25,6 @@ object AntsBees extends SimpleSwingApplication {
     //Defining Cells :
     val nulpoint = new Point(0, 0)
 
-    val hive = new Hive(C, t1: Tunnel)
     val width = tunnel_icon.getIconWidth()
     val alt = 300 //where is the tunnel on the y-axis
     val t0: Tunnel = new Tunnel(nulpoint, null, null, tunnel_icon) //just a place to put the insects in the hive
@@ -53,6 +52,8 @@ object AntsBees extends SimpleSwingApplication {
     val bye = new Bye(new Point(450, 150))
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
     var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
+
+    val hive = new Hive(C, t1: Tunnel) // move declaration after C to avoir forward-reference with lazy constructor
 
     val purse = new Purse(0)
     def update() = {
