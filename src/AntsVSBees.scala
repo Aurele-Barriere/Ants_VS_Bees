@@ -17,7 +17,7 @@ object AntsBees extends SimpleSwingApplication {
   ////////////////////////////////////////////////////
 
   object state {
-    var lost :Boolean = false //have we lost the game?
+    var lost: Boolean = false //have we lost the game?
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
     val tun: Int = 8 //number of tunnel places
@@ -25,7 +25,7 @@ object AntsBees extends SimpleSwingApplication {
     //Defining Cells :
     val nulpoint = new Point(0, 0)
 
-    val hive = new Hive(C, t1: Tunnel)
+    var hive = new Hive(C, t1: Tunnel)
     val width = tunnel_icon.getIconWidth()
     val alt = 300 //where is the tunnel on the y-axis
     val t0: Tunnel = new Tunnel(nulpoint, null, null, tunnel_icon) //just a place to put the insects in the hive
@@ -53,10 +53,18 @@ object AntsBees extends SimpleSwingApplication {
     val bye = new Bye(new Point(450, 150))
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
     var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
+    hive = new Hive(C, t1)
 
     val purse = new Purse(0)
     def update() = {
-      if (purse.money < 100000) { purse.money += 1 } //call the turns
+      Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
+      for (i <- Insects) {
+        i match {
+          case a: Ant => a.attack()
+          case b: Bee => b.move() //will attack if there's an ant
+        }
+      }
+
     }
     /* reset(): empties the screen */
     def reset() = {
@@ -76,9 +84,9 @@ object AntsBees extends SimpleSwingApplication {
     listenTo(mouse.clicks, mouse.moves, keys)
     def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
     reactions += {
-      case e: MousePressed =>/* for (c <- state.hive.Cells) {
+      case e: MousePressed =>  for (c <- state.hive.Cells) {
       if (c.is_clicked(getPos())) {state.hive.select(c)}
-    }*/
+    }
         //state.removeSpriteAt(e.point)
         requestFocusInWindow()
       case e: MouseDragged        => /* Nothing for now */
@@ -92,8 +100,6 @@ object AntsBees extends SimpleSwingApplication {
     }
 
     /* Returns the current position of the mouse (or null if it's not over the panel */
-    
-    
 
     /* A nice box */
 
@@ -104,7 +110,7 @@ object AntsBees extends SimpleSwingApplication {
       //g.drawString(" Press 'i' to add sprites, 'c' to remove them all. Click on sprite to destroy them", 10, size.height - 10)
       val pos = getPos()
       if (pos != null)
-        g.drawString("x: " + pos.x + " y: " + pos.y + state.purse.money, size.width - 85, 15)
+        g.drawString("food : " + state.purse.money, size.width - 200, 10)
 
       g.setColor(Color.black)
       //g.draw(boxPath)
@@ -120,7 +126,7 @@ object AntsBees extends SimpleSwingApplication {
           case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
           case b: Bye     => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
         }
-        if (true) {
+        if (c.is_selected) {
           val boxPath = new geom.GeneralPath
           boxPath.moveTo(c.pos.x, c.pos.y)
           boxPath.lineTo(c.pos.x + 100, c.pos.y)
@@ -130,7 +136,7 @@ object AntsBees extends SimpleSwingApplication {
           g.draw(boxPath)
         }
       }
-      
+
     }
   }
 
