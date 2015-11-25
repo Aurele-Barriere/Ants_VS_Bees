@@ -74,9 +74,11 @@ object AntsBees extends SimpleSwingApplication {
 
     focusable = true
     listenTo(mouse.clicks, mouse.moves, keys)
-
+    def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
     reactions += {
-      case e: MousePressed =>
+      case e: MousePressed =>/* for (c <- state.hive.Cells) {
+      if (c.is_clicked(getPos())) {state.hive.select(c)}
+    }*/
         //state.removeSpriteAt(e.point)
         requestFocusInWindow()
       case e: MouseDragged        => /* Nothing for now */
@@ -90,7 +92,8 @@ object AntsBees extends SimpleSwingApplication {
     }
 
     /* Returns the current position of the mouse (or null if it's not over the panel */
-    def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
+    
+    
 
     /* A nice box */
 
@@ -112,12 +115,12 @@ object AntsBees extends SimpleSwingApplication {
       for (t <- state.Tunnels) {
         g.drawImage(t.im, t.pos.x, t.pos.y, peer)
       }
-      for (c <- state.C) {
+      for (c <- state.hive.Cells) {
         c match {
           case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
           case b: Bye     => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
         }
-        if (c.is_selected) {
+        if (true) {
           val boxPath = new geom.GeneralPath
           boxPath.moveTo(c.pos.x, c.pos.y)
           boxPath.lineTo(c.pos.x + 100, c.pos.y)

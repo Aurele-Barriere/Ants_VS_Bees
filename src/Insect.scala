@@ -42,6 +42,7 @@ abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) exte
   def attack() = {
 
   }
+  
 }
 
 class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png"), 100, 0, lo) {

@@ -52,6 +52,11 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
 
 class Cell(p: Point) extends Place(p) {
   var is_selected: Boolean = false
+  val width :Int = 100
+  val height :Int = 100
+  def is_clicked(click :Point)  = {
+    if (click.x < p.x + width && click.x > p.x && click.y < p.y + height && click.y > p.y) {true} else {false}
+  }
 }
 
 class Bye(p : Point) extends Cell(p) {
@@ -77,7 +82,7 @@ class Hive(L: List[Cell], t: Tunnel) extends Place(new Point(0, 0)) {
   lazy val entrance: Tunnel = t
   lazy val Cells: List[Cell] = L
   def select(c: Cell) {
-    for (cell <- Cells) {
+    for (cell <- this.Cells) {
       cell.is_selected = false
     }
     c.is_selected = true
