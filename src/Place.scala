@@ -69,11 +69,10 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   val typeant: Ant = t
 
   def buy_ant(p: Purse, tun: Tunnel) = {
-    tun.typeant match {
-      case n: None => if (p.money >= this.typeant.cost) {
-        p.take_money(this.typeant.cost)
-        //tun.typeant = new this.typeant (new Point(0,0), tun) // we need a way to make a copy.
-      }
+    this.typeant match {
+      case a: Harvester => tun.typeant = new Harvester (new Point(tun.pos.x,tun.pos.y), tun)
+      case a: Thrower => tun.typeant = new Thrower (new Point(tun.pos.x,tun.pos.y), tun)
+      //to do? or is there a more simpler way?
     }
   }
 }
