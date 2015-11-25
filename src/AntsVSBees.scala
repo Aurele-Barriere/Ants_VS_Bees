@@ -83,10 +83,16 @@ object AntsBees extends SimpleSwingApplication {
     focusable = true
     listenTo(mouse.clicks, mouse.moves, keys)
     def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
-    reactions += {
-      case e: MousePressed =>  for (c <- state.hive.Cells) {
-      if (c.is_clicked(getPos())) {state.hive.select(c)}
+    def on_click() = {
+      for (c <- state.hive.Cells) if (c.is_clicked(getPos())) (state.hive.select(c))
+      for (t <- state.Tunnels) if (t.is_clicked(getPos())) { for (c <- state.hive.Cells) if (c.is_selected) {c.buy_ant(state.purse, t)}} 
+        
     }
+    reactions += {
+      case e: MousePressed => on_click()
+        
+        
+      
         //state.removeSpriteAt(e.point)
         requestFocusInWindow()
       case e: MouseDragged        => /* Nothing for now */
