@@ -18,6 +18,7 @@ object AntsBees extends SimpleSwingApplication {
 
   object state {
     var lost: Boolean = false //have we lost the game?
+    var nextTurn :Boolean = false 
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
     val tun: Int = 8 //number of tunnel places
@@ -38,6 +39,10 @@ object AntsBees extends SimpleSwingApplication {
     val t7: Tunnel = new Tunnel(new Point(6 * width, alt), hive, t8, tunnel_icon)
     val t8: Tunnel = new Tunnel(new Point(7 * width, alt), hive, entrance, tunnel_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
+    val b = new Bee(new Point(8 * width, alt), entrance)
+    entrance.bees = List(b)
+    Insects = b :: Insects
+   
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(nulpoint, t0))
     val thrower = new CellAnt(new Point(150, 50), new Thrower(nulpoint, t0))
@@ -58,12 +63,13 @@ object AntsBees extends SimpleSwingApplication {
     val purse = new Purse(10)
     def update() = {
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
-      for (i <- Insects) {
+      if (nextTurn) for (i <- Insects) {
         i match {
           case a: Ant => a.attack()
           case b: Bee => b.move() //will attack if there's an ant
         }
       }
+     nextTurn = false
 
     }
     /* reset(): empties the screen */
@@ -97,7 +103,7 @@ object AntsBees extends SimpleSwingApplication {
       case e: MouseDragged        => /* Nothing for now */
       case e: MouseReleased       => /* Nothing for now */
       case KeyTyped(_, 'c', _, _) => state.reset()
-      //case KeyTyped(_, 'i', _, _) => state.addImage(getPos())
+      case KeyTyped(_, 'n', _, _) => state.nextTurn = true 
       //case KeyTyped(_, 'a', _, _) => state.speedIncrease()
       //case KeyTyped(_, 'z', _, _) => state.speedDecrease()
 
@@ -116,7 +122,7 @@ object AntsBees extends SimpleSwingApplication {
       val pos = getPos()
       if (pos != null)
         g.drawString("food : " + state.purse.money, size.width - 200, 10)
-
+      if (state.lost) {g.drawString("lost", 400,500)}
       g.setColor(Color.black)
       //g.draw(boxPath)
 

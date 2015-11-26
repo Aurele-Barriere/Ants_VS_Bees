@@ -107,6 +107,9 @@ class Hive(L: List[Cell], t: Tunnel) extends Place(new Point(0, 0)) {
 
 class Entrance(p: Point, t: Tunnel) extends Place(p) {
   lazy val exit: Tunnel = t
-  val bees: List[Bee] = Nil
+  var bees: List[Bee] = Nil
+  def removebee(b: Bee) = {
+    bees = bees diff List(b)
+  }
 
 }

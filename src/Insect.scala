@@ -36,6 +36,9 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
           case Some(a) => (a.armor -= 1)
         }
       }
+      case e: Entrance => 
+        e.removebee(this)
+        e.exit.addbee(this)
     }
   }
 }
