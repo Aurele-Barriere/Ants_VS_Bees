@@ -55,7 +55,7 @@ object AntsBees extends SimpleSwingApplication {
     var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
     val hive = new Hive(C, t1)
 
-    val purse = new Purse(0)
+    val purse = new Purse(10)
     def update() = {
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
       for (i <- Insects) {
@@ -85,14 +85,13 @@ object AntsBees extends SimpleSwingApplication {
     def getPos() = peer.getMousePosition() // (note: peer is the java panel under the Scala wrapper)
     def on_click() = {
       for (c <- state.hive.Cells) if (c.is_clicked(getPos())) (state.hive.select(c))
-      for (t <- state.Tunnels) if (t.is_clicked(getPos())) { for (c <- state.hive.Cells) if (c.is_selected) {c.buy_ant(state.purse, t)}} 
-        
+      for (t <- state.Tunnels) if (t.is_clicked(getPos())) { for (c <- state.hive.Cells) if (c.is_selected) { c.buy_ant(state.purse, t) } }
+
     }
     reactions += {
-      case e: MousePressed => on_click()
-        
-        
-      
+      case e: MousePressed =>
+        on_click()
+
         //state.removeSpriteAt(e.point)
         requestFocusInWindow()
       case e: MouseDragged        => /* Nothing for now */

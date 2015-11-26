@@ -10,7 +10,7 @@ class Place(p: Point) {
 class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   lazy val exit: Place = ex
   lazy val entrance: Place = en
-  var typeant: Ant = new None(this)
+  var ant: Option[Ant] = None
   var bees: List[Bee] = Nil
   val icon: ImageIcon = ico
   val im = icon.getImage()
@@ -25,11 +25,11 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     bees = bees diff List(b)
   }
   def removeant = {
-    typeant = new None(this)
+    ant = None
   }
   def addant(t: Ant) {
-    typeant match {
-      case n: None => typeant = t
+    ant match {
+      case None => ant = Some(t)
     }
   }
 
@@ -67,7 +67,7 @@ class Cell(p: Point) extends Place(p) {
 
 class Bye(p: Point) extends Cell(p) {
   override def buy_ant(p: Purse, tun: Tunnel) = {
-    tun.typeant.armor = 0
+    tun.ant = None
   }
 }
 
@@ -75,20 +75,23 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   val typeant: Ant = t
 
   override def buy_ant(p: Purse, tun: Tunnel) = {
+    if (AntsBees.state.purse.money > this.typeant.cost && tun.ant == None ) {
     this.typeant match {
-      case a: Harvester     => tun.typeant = new Harvester(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Thrower       => tun.typeant = new Thrower(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Short_Thrower => tun.typeant = new Short_Thrower(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Long_Thrower  => tun.typeant = new Long_Thrower(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Fire   => tun.typeant = new Fire(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Scuba  => tun.typeant = new Scuba(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Ninja   => tun.typeant = new Ninja(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Hungry   => tun.typeant = new Hungry(new Point(tun.pos.x, tun.pos.y), tun)
-      case a: Queen   => tun.typeant = new Queen(new Point(tun.pos.x, tun.pos.y), tun)
-      
+      case a: Harvester     => tun.ant = Some(new Harvester(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Thrower       => tun.ant = Some(new Thrower(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Short_Thrower => tun.ant = Some(new Short_Thrower(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Long_Thrower  => tun.ant = Some(new Long_Thrower(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Fire          => tun.ant = Some(new Fire(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Scuba         => tun.ant = Some(new Scuba(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Ninja         => tun.ant = Some(new Ninja(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Hungry        => tun.ant = Some(new Hungry(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Queen         => tun.ant = Some(new Queen(new Point(tun.pos.x, tun.pos.y), tun))
+
       //to do? or is there a more simpler way?
     }
-    AntsBees.state.Insects = tun.typeant :: AntsBees.state.Insects
+    tun.ant match {case Some(a) => AntsBees.state.Insects = a :: AntsBees.state.Insects} //adding the ant
+    AntsBees.state.purse.money -= this.typeant.cost //taking money
+    }
   }
 }
 

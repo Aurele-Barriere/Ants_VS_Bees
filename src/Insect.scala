@@ -24,16 +24,16 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
   def move() = {
     location match {
       case t: Tunnel => {
-        t.typeant match {
+        t.ant match {
 
-          case n: None => {
+          case None => {
             t.removebee(this)
             t.exit match {
               case s: Tunnel => s.addbee(this)
               case h: Hive   => AntsBees.state.lost = true
             }
           }
-          case _ => (t.typeant.armor -= 1)
+          case Some(a) => (a.armor -= 1)
         }
       }
     }
@@ -51,11 +51,12 @@ abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) exte
   }
 
 }
-
+/*
 class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png"), 100, 0, lo) {
   override val watersafe = true // Would be problematic if empty cases ended up drowning
 }
-
+*/ 
+//option type is better
 // Basic Units
 
 class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2, lo) {
