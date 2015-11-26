@@ -24,13 +24,12 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   def removebee(b: Bee) = {
     bees = bees diff List(b)
   }
-  def removeant = {
+  def removeant ()= {
+    ant match {case Some(a) => a.armor = 0}
     ant = None
   }
   def addant(t: Ant) {
-    ant match {
-      case None => ant = Some(t)
-    }
+    if (ant == None) {ant = Some(t)}
   }
 
   def left_neighbour(n: Int): Place = {
@@ -67,7 +66,7 @@ class Cell(p: Point) extends Place(p) {
 
 class Bye(p: Point) extends Cell(p) {
   override def buy_ant(p: Purse, tun: Tunnel) = {
-    tun.ant = None
+    tun.removeant()
   }
 }
 
