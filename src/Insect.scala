@@ -98,18 +98,18 @@ class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_
 class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
   val damage: Int = 1
   val deadrange: Int = 3
-  def attacking(pl: Tunnel): Unit = {
-    pl.entrance match {
+  def attacking(pl: Place): Unit = {
+    pl match {
       case t: Tunnel => t.bees match {
-        case Nil          => this.attacking(t)
+        case Nil          => this.attacking(t.entrance)
         case l: List[Bee] => l.head.armor -= damage
       }
     }
   }
   //We first need to jump over the dead space
-  def charging(pl: Tunnel, n: Int): Unit = {
+  def charging(pl: Place, n: Int): Unit = {
     if (n > 0) {
-      charging(pl, n - 1)
+       charging(pl, n - 1)
     } else {
       attacking(pl)
     }
