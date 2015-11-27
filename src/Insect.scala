@@ -5,11 +5,12 @@ import javax.swing.ImageIcon
 
 class Insect(p: Point, ico: ImageIcon, arm: Int) {
   val pos: Point = p
+  val damage = 1
   val icon: ImageIcon = ico
   val im = icon.getImage()
   val width: Int = icon.getIconWidth()
   val height: Int = icon.getIconHeight()
-  val watersafe = true
+  val watersafe = false
   var armor: Int = arm //when goes down to 0, the insect dies :'(
 
   def inSprite(p: Point) = { //returns true if a given point is in the sprite
@@ -49,25 +50,22 @@ abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) exte
   val location: Tunnel = lo
   val cost: Int = co
   val blocksPath = true
-  def attack() = {
-
-  }
-
+  def attack() = {}
 }
 /*
 class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png"), 100, 0, lo) {
   override val watersafe = true // Would be problematic if empty cases ended up drowning
 }
-*/ 
+ */
 //option type is better
 // Basic Units
 
 class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2, lo) {
+  override val damage = 0
   override def attack() = { AntsBees.state.purse.add_money(1) }
 }
 
 class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2, lo) {
-  val damage: Int = 1
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
       case t: Tunnel => t.bees match {
@@ -80,7 +78,6 @@ class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_throwe
 }
 
 class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
-  val damage: Int = 1
   val range: Int = 2
   def attacking(pl: Place, n: Int): Unit = {
     if (n > 0) {
@@ -96,7 +93,6 @@ class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_
 }
 
 class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
-  val damage: Int = 1
   val deadrange: Int = 3
   def attacking(pl: Place): Unit = {
     pl match {
@@ -120,7 +116,7 @@ class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_l
 // Gimmicky ants
 
 class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 5, 3, lo) {
-  val damage: Int = 3
+  override val damage: Int = 3
   def reduceArmor(): Unit = {
     if (this.armor < 1) {
       for (b <- this.location.bees) {
@@ -135,6 +131,15 @@ class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"
 
 class Scuba(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 5, 1, lo) {
   override val watersafe = true
+  def attacking(pl: Tunnel): Unit = {
+    pl.entrance match {
+      case t: Tunnel => t.bees match {
+        case Nil          => this.attacking(t)
+        case l: List[Bee] => l.head.armor -= damage
+      }
+    }
+  }
+  override def attack() = { attacking(this.location) }
 }
 
 class Wall(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4, lo) {
@@ -143,7 +148,6 @@ class Wall(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"
 
 class Ninja(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 6, 1, lo) {
   override val blocksPath = false
-  val damage = 1
   override def attack(): Unit = {
     for (b <- this.location.bees) {
       b.armor -= damage
@@ -153,7 +157,7 @@ class Ninja(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.pn
 
 class Hungry(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 4, 1, lo) {
   var digesting = 0
-  val damage = 0
+  override val damage = 0
   def eat(): Unit = {
     if (this.location.bees != Nil) {
       this.location.bees.head.armor = 0
@@ -174,8 +178,7 @@ class Hungry(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.
   }
 }
 
-// Bodyguard Ant currently has no sprite, thrower spite used as placeholder
-class Bodyguard(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 4, 2, lo) {
+class Bodyguard(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 4, 2, lo) {
 
 }
 

@@ -10,6 +10,7 @@ class Place(p: Point) {
 class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   lazy val exit: Place = ex
   lazy val entrance: Place = en
+  val ground = true
   var ant: Option[Ant] = None
   var bees: List[Bee] = Nil
   val icon: ImageIcon = ico
@@ -31,7 +32,7 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   def addant(t: Ant) {
     if (ant == None) {ant = Some(t)}
   }
-
+// deprecated neighbour code? You might want to check on this
   def left_neighbour(n: Int): Place = {
     n match {
       case 0 => return this
@@ -74,7 +75,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   val typeant: Ant = t
 
   override def buy_ant(p: Purse, tun: Tunnel) = {
-    if (AntsBees.state.purse.money > this.typeant.cost && tun.ant == None ) {
+    if (AntsBees.state.purse.money > this.typeant.cost && tun.ant == None && (this.typeant.watersafe || tun.ground)) {
     this.typeant match {
       case a: Harvester     => tun.ant = Some(new Harvester(new Point(tun.pos.x, tun.pos.y), tun))
       case a: Thrower       => tun.ant = Some(new Thrower(new Point(tun.pos.x, tun.pos.y), tun))
@@ -86,14 +87,16 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
       case a: Hungry        => tun.ant = Some(new Hungry(new Point(tun.pos.x, tun.pos.y), tun))
       case a: Queen         => tun.ant = Some(new Queen(new Point(tun.pos.x, tun.pos.y), tun))
 
-      //to do? or is there a more simpler way?
+      //to do? or is there a more simpler way? 
     }
-    tun.ant match {case Some(a) => AntsBees.state.Insects = a :: AntsBees.state.Insects} //adding the ant
-    AntsBees.state.purse.money -= this.typeant.cost //taking money
+    tun.ant match {
+      case Some(a) => 
+        AntsBees.state.Insects = a :: AntsBees.state.Insects
+        AntsBees.state.purse.money -= this.typeant.cost //taking money
     }
+   }
   }
 }
-
 class Hive(L: List[Cell], t: Tunnel) extends Place(new Point(0, 0)) {
   lazy val entrance: Tunnel = t
   lazy val Cells: List[Cell] = L
@@ -111,5 +114,4 @@ class Entrance(p: Point, t: Tunnel) extends Place(p) {
   def removebee(b: Bee) = {
     bees = bees diff List(b)
   }
-
 }

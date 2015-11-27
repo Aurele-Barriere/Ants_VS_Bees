@@ -70,7 +70,6 @@ object AntsBees extends SimpleSwingApplication {
         }
       }
      nextTurn = false
-
     }
     /* reset(): empties the screen */
     def reset() = {
