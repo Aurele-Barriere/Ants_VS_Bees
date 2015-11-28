@@ -41,6 +41,7 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
         e.removebee(this)
         e.exit.addbee(this)
         this.location = e.exit
+      case h:Hive => 
     }
   }
 }

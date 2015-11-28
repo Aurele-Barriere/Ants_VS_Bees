@@ -72,7 +72,7 @@ object AntsBees extends SimpleSwingApplication {
           case b: Bee => b.move() //will attack if there's an ant
         }
       }
-     nextTurn = false
+     nextTurn = false // leave the player some time
     }
     /* reset(): empties the screen */
     def reset() = {

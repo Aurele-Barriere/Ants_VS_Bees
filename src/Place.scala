@@ -26,7 +26,7 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     bees = bees diff List(b)
   }
   def removeant ()= {
-    ant match {case Some(a) => a.armor = 0}
+    ant match {case Some(a) => a.armor = 0 case None => }
     ant = None
   }
   def addant(t: Ant) {
@@ -93,6 +93,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
       case Some(a) => 
         AntsBees.state.Insects = a :: AntsBees.state.Insects
         AntsBees.state.purse.money -= this.typeant.cost //taking money
+      case None =>     
     }
    }
   }
