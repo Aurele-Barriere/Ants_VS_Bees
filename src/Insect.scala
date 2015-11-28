@@ -5,7 +5,7 @@ import javax.swing.ImageIcon
 
 class Insect(p: Place, ico: ImageIcon, arm: Int) {
   var location: Place = p
-  val damage = 1
+  val damage = 1 
   val icon: ImageIcon = ico
   val im = icon.getImage()
   val width: Int = icon.getIconWidth()
@@ -21,12 +21,11 @@ class Insect(p: Place, ico: ImageIcon, arm: Int) {
 
 class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
   override val watersafe = true
-  //var location: Place = lo
+  
   def move() = {
     location match {
       case t: Tunnel => {
         t.ant match {
-
           case None => {
             t.removebee(this)
             this.location = t.exit
@@ -41,6 +40,7 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
       case e: Entrance =>
         e.removebee(this)
         e.exit.addbee(this)
+        this.location = e.exit
     }
   }
 }

@@ -31,13 +31,13 @@ object AntsBees extends SimpleSwingApplication {
     val alt = 300 //where is the tunnel on the y-axis
     val t0: Tunnel = new Tunnel(nulpoint, null, null, tunnel_icon) //just a place to put the insects in the hive
     val t1: Tunnel = new Tunnel(new Point(0, alt), hive, t2, tunnel_icon)
-    val t2: Tunnel = new Tunnel(new Point(width, alt), hive, t3, tunnel_icon)
-    val t3: Tunnel = new Tunnel(new Point(2 * width, alt), hive, t4, tunnel_icon)
-    val t4: Tunnel = new Tunnel(new Point(3 * width, alt), hive, t5, tunnel_icon)
-    val t5: Tunnel = new Tunnel(new Point(4 * width, alt), hive, t6, tunnel_icon)
-    val t6: Tunnel = new Tunnel(new Point(5 * width, alt), hive, t7, tunnel_icon)
-    val t7: Tunnel = new Tunnel(new Point(6 * width, alt), hive, t8, tunnel_icon)
-    val t8: Tunnel = new Tunnel(new Point(7 * width, alt), hive, entrance, tunnel_icon)
+    val t2: Tunnel = new Tunnel(new Point(width, alt), t1, t3, tunnel_icon)
+    val t3: Tunnel = new Tunnel(new Point(2 * width, alt), t2, t4, tunnel_icon)
+    val t4: Tunnel = new Tunnel(new Point(3 * width, alt), t3, t5, tunnel_icon)
+    val t5: Tunnel = new Tunnel(new Point(4 * width, alt), t4, t6, tunnel_icon)
+    val t6: Tunnel = new Tunnel(new Point(5 * width, alt), t5, t7, tunnel_icon)
+    val t7: Tunnel = new Tunnel(new Point(6 * width, alt), t6, t8, tunnel_icon)
+    val t8: Tunnel = new Tunnel(new Point(7 * width, alt), t7, entrance, tunnel_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
     val b = new Bee(entrance)
     entrance.bees = List(b)
@@ -63,6 +63,9 @@ object AntsBees extends SimpleSwingApplication {
     val purse = new Purse(10)
     def update() = {
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
+      for (t <- Tunnels) {
+        t.ant match {case Some(a) => if (a.armor <1) {t.ant = None} case None => }
+      }
       if (nextTurn) for (i <- Insects) {
         i match {
           case a: Ant => a.attack()
