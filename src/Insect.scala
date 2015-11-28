@@ -3,8 +3,8 @@
 import java.awt.Point
 import javax.swing.ImageIcon
 
-class Insect(p: Point, ico: ImageIcon, arm: Int) {
-  val pos: Point = p
+class Insect(p: Place, ico: ImageIcon, arm: Int) {
+  var location: Place = p
   val damage = 1
   val icon: ImageIcon = ico
   val im = icon.getImage()
@@ -14,14 +14,14 @@ class Insect(p: Point, ico: ImageIcon, arm: Int) {
   var armor: Int = arm //when goes down to 0, the insect dies :'(
 
   def inSprite(p: Point) = { //returns true if a given point is in the sprite
-    (pos.x < p.x && p.x < pos.x + width &&
-      pos.y < p.y && p.y < pos.y + height)
+    (location.pos.x < p.x && p.x < location.pos.x + width &&
+      location.pos.y < p.y && p.y < location.pos.y + height)
   }
 }
 
-class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
+class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
   override val watersafe = true
-  var location: Place = lo
+  //var location: Place = lo
   def move() = {
     location match {
       case t: Tunnel => {
@@ -29,6 +29,7 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
 
           case None => {
             t.removebee(this)
+            this.location = t.exit
             t.exit match {
               case s: Tunnel => s.addbee(this)
               case h: Hive   => AntsBees.state.lost = true
@@ -37,7 +38,7 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
           case Some(a) => (a.armor -= 1)
         }
       }
-      case e: Entrance => 
+      case e: Entrance =>
         e.removebee(this)
         e.exit.addbee(this)
     }
@@ -46,8 +47,8 @@ class Bee(p: Point, lo: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2
 
 // Ants
 
-abstract class Ant(p: Point, ico: ImageIcon, arm: Int, co: Int, lo: Tunnel) extends Insect(p, ico, arm) {
-  val location: Tunnel = lo
+abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(p, ico, arm) {
+  //val location: Tunnel = lo
   val cost: Int = co
   val blocksPath = true
   def attack() = {}
@@ -60,12 +61,12 @@ class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png")
 //option type is better
 // Basic Units
 
-class Harvester(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2, lo) {
+class Harvester(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2) {
   override val damage = 0
   override def attack() = { AntsBees.state.purse.add_money(1) }
 }
 
-class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2, lo) {
+class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2) {
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
       case t: Tunnel => t.bees match {
@@ -74,10 +75,10 @@ class Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_throwe
       }
     }
   }
-  override def attack() = { attacking(this.location) }
+  override def attack() = { attacking(p) }
 }
 
-class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3, lo) {
+class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3) {
   val range: Int = 2
   def attacking(pl: Place, n: Int): Unit = {
     if (n > 0) {
@@ -92,7 +93,7 @@ class Short_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_
   override def attack() = { attacking(this.location, range) }
 }
 
-class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3, lo) {
+class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3) {
   val deadrange: Int = 3
   def attacking(pl: Place): Unit = {
     pl match {
@@ -105,7 +106,7 @@ class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_l
   //We first need to jump over the dead space
   def charging(pl: Place, n: Int): Unit = {
     if (n > 0) {
-       charging(pl, n - 1)
+      charging(pl, n - 1)
     } else {
       attacking(pl)
     }
@@ -115,11 +116,11 @@ class Long_Thrower(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_l
 
 // Gimmicky ants
 
-class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 5, 3, lo) {
+class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 5, 3) {
   override val damage: Int = 3
   def reduceArmor(): Unit = {
     if (this.armor < 1) {
-      for (b <- this.location.bees) {
+      for (b <- p.bees) {
         b.armor -= damage
       }
     }
@@ -129,7 +130,7 @@ class Fire(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"
   }
 }
 
-class Scuba(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 5, 1, lo) {
+class Scuba(p :Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 5, 1) {
   override val watersafe = true
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
@@ -139,28 +140,28 @@ class Scuba(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.pn
       }
     }
   }
-  override def attack() = { attacking(this.location) }
+  override def attack() = { attacking(p) }
 }
 
-class Wall(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4, lo) {
+class Wall(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4) {
 
 }
 
-class Ninja(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 6, 1, lo) {
+class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 6, 1) {
   override val blocksPath = false
   override def attack(): Unit = {
-    for (b <- this.location.bees) {
+    for (b <- p.bees) {
       b.armor -= damage
     }
   }
 }
 
-class Hungry(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 4, 1, lo) {
+class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 4, 1) {
   var digesting = 0
   override val damage = 0
   def eat(): Unit = {
-    if (this.location.bees != Nil) {
-      this.location.bees.head.armor = 0
+    if (p.bees != Nil) {
+      p.bees.head.armor = 0
       this digesting = 3
     }
   }
@@ -178,13 +179,13 @@ class Hungry(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.
   }
 }
 
-class Bodyguard(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 4, 2, lo) {
+class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 4, 2) {
 
 }
 
 // Here comes the queen
 
-class Queen(p: Point, lo: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 6, 2, lo) {
+class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 6, 2) {
   override val watersafe = true
 }
 

@@ -77,15 +77,15 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   override def buy_ant(p: Purse, tun: Tunnel) = {
     if (AntsBees.state.purse.money > this.typeant.cost && tun.ant == None && (this.typeant.watersafe || tun.ground)) {
     this.typeant match {
-      case a: Harvester     => tun.ant = Some(new Harvester(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Thrower       => tun.ant = Some(new Thrower(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Short_Thrower => tun.ant = Some(new Short_Thrower(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Long_Thrower  => tun.ant = Some(new Long_Thrower(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Fire          => tun.ant = Some(new Fire(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Scuba         => tun.ant = Some(new Scuba(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Ninja         => tun.ant = Some(new Ninja(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Hungry        => tun.ant = Some(new Hungry(new Point(tun.pos.x, tun.pos.y), tun))
-      case a: Queen         => tun.ant = Some(new Queen(new Point(tun.pos.x, tun.pos.y), tun))
+      case a: Harvester     => tun.ant = Some(new Harvester(tun))
+      case a: Thrower       => tun.ant = Some(new Thrower(tun))
+      case a: Short_Thrower => tun.ant = Some(new Short_Thrower(tun))
+      case a: Long_Thrower  => tun.ant = Some(new Long_Thrower(tun))
+      case a: Fire          => tun.ant = Some(new Fire(tun))
+      case a: Scuba         => tun.ant = Some(new Scuba(tun))
+      case a: Ninja         => tun.ant = Some(new Ninja(tun))
+      case a: Hungry        => tun.ant = Some(new Hungry(tun))
+      case a: Queen         => tun.ant = Some(new Queen(tun))
 
       //to do? or is there a more simpler way? 
     }

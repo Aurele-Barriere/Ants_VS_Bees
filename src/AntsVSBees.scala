@@ -39,22 +39,22 @@ object AntsBees extends SimpleSwingApplication {
     val t7: Tunnel = new Tunnel(new Point(6 * width, alt), hive, t8, tunnel_icon)
     val t8: Tunnel = new Tunnel(new Point(7 * width, alt), hive, entrance, tunnel_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
-    val b = new Bee(new Point(8 * width, alt), entrance)
+    val b = new Bee(entrance)
     entrance.bees = List(b)
     Insects = b :: Insects
    
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
-    val harvester = new CellAnt(new Point(50, 50), new Harvester(nulpoint, t0))
-    val thrower = new CellAnt(new Point(150, 50), new Thrower(nulpoint, t0))
-    val short = new CellAnt(new Point(250, 50), new Short_Thrower(nulpoint, t0))
-    val long = new CellAnt(new Point(350, 50), new Long_Thrower(nulpoint, t0))
-    val fire = new CellAnt(new Point(450, 50), new Fire(nulpoint, t0))
-    val scuba = new CellAnt(new Point(550, 50), new Scuba(nulpoint, t0))
-    val wall = new CellAnt(new Point(650, 50), new Wall(nulpoint, t0))
-    val ninja = new CellAnt(new Point(50, 150), new Ninja(nulpoint, t0))
-    val hungry = new CellAnt(new Point(150, 150), new Hungry(nulpoint, t0))
-    val bodyguard = new CellAnt(new Point(250, 150), new Bodyguard(nulpoint, t0))
-    val queen = new CellAnt(new Point(350, 150), new Queen(nulpoint, t0))
+    val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
+    val thrower = new CellAnt(new Point(150, 50), new Thrower(t0))
+    val short = new CellAnt(new Point(250, 50), new Short_Thrower(t0))
+    val long = new CellAnt(new Point(350, 50), new Long_Thrower(t0))
+    val fire = new CellAnt(new Point(450, 50), new Fire(t0))
+    val scuba = new CellAnt(new Point(550, 50), new Scuba(t0))
+    val wall = new CellAnt(new Point(650, 50), new Wall(t0))
+    val ninja = new CellAnt(new Point(50, 150), new Ninja(t0))
+    val hungry = new CellAnt(new Point(150, 150), new Hungry(t0))
+    val bodyguard = new CellAnt(new Point(250, 150), new Bodyguard(t0))
+    val queen = new CellAnt(new Point(350, 150), new Queen(t0))
     val bye = new Bye(new Point(450, 150))
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
     var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
@@ -126,7 +126,7 @@ object AntsBees extends SimpleSwingApplication {
       //g.draw(boxPath)
 
       for (ins <- state.Insects) {
-        g.drawImage(ins.im, ins.pos.x, ins.pos.y, peer)
+        g.drawImage(ins.im, ins.location.pos.x, ins.location.pos.y, peer)
       }
       for (t <- state.Tunnels) {
         g.drawImage(t.im, t.pos.x, t.pos.y, peer)
