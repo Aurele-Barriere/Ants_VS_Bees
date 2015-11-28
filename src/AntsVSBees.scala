@@ -39,7 +39,7 @@ object AntsBees extends SimpleSwingApplication {
     val t7: Tunnel = new Tunnel(new Point(6 * width, alt), t6, t8, tunnel_icon)
     val t8: Tunnel = new Tunnel(new Point(7 * width, alt), t7, entrance, tunnel_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
-    entrance.createbees(12)
+    entrance.createbees(2)
    
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
@@ -125,13 +125,13 @@ object AntsBees extends SimpleSwingApplication {
       if (state.lost) {g.drawString("lost", 400,500)}
       g.setColor(Color.black)
       //g.draw(boxPath)
-
-      for (ins <- state.Insects) {
-        g.drawImage(ins.im, ins.location.pos.x, ins.location.pos.y, peer)
-      }
       for (t <- state.Tunnels) {
         g.drawImage(t.im, t.pos.x, t.pos.y, peer)
       }
+      for (ins <- state.Insects) {
+        g.drawImage(ins.im, ins.location.pos.x, ins.location.pos.y, peer)
+      }
+      
       for (c <- state.hive.Cells) {
         c match {
           case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
