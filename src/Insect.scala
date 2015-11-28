@@ -117,7 +117,7 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
 
 // Gimmicky ants
 
-class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 5, 3) {
+class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 3, 5) {
   override val damage: Int = 3
   def reduceArmor(): Unit = {
     if (this.armor < 1) {
@@ -131,7 +131,7 @@ class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 5, 3) {
   }
 }
 
-class Scuba(p :Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 5, 1) {
+class Scuba(p :Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 1, 5) {
   override val watersafe = true
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
@@ -148,7 +148,7 @@ class Wall(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4) {
 
 }
 
-class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 6, 1) {
+class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) {
   override val blocksPath = false
   override def attack(): Unit = {
     for (b <- p.bees) {
@@ -157,7 +157,7 @@ class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 6, 1) 
   }
 }
 
-class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 4, 1) {
+class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 1, 4) {
   var digesting = 0
   override val damage = 0
   def eat(): Unit = {
@@ -180,13 +180,13 @@ class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 4, 1
   }
 }
 
-class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 4, 2) {
+class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2, 4) {
 
 }
 
 // Here comes the queen
 
-class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 6, 2) {
+class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) {
   override val watersafe = true
 }
 

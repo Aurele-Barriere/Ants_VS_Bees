@@ -37,7 +37,7 @@ object AntsBees extends SimpleSwingApplication {
     val t5: Tunnel = new Tunnel(new Point(4 * width, alt), t4, t6, tunnel_icon)
     val t6: Tunnel = new Tunnel(new Point(5 * width, alt), t5, t7, tunnel_icon)
     val t7: Tunnel = new Tunnel(new Point(6 * width, alt), t6, t8, tunnel_icon)
-    val t8: Tunnel = new Tunnel(new Point(7 * width, alt), t7, entrance, tunnel_icon)
+    val t8: Tunnel = new Water(new Point(7 * width, alt), t7, entrance, tunnel_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
     entrance.createbees(2)
    

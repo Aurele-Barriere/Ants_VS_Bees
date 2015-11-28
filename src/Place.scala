@@ -71,6 +71,10 @@ class Bye(p: Point) extends Cell(p) {
   }
 }
 
+class Water(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Tunnel(p, ex, en, ico) {
+  override val ground = false  
+}
+
 class CellAnt(p: Point, t: Ant) extends Cell(p) {
   val typeant: Ant = t
 
