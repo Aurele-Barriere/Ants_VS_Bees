@@ -61,13 +61,21 @@ object AntsBees extends SimpleSwingApplication {
 
     val purse = new Purse(100)
     def update() = {
+      for (i <- Insects) {
+        if (i.armor <= 0) {
+          i.reduceArmor()
+        }
+      }
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
       for (t <- Tunnels) {
-        t.ant match {case Some(a) => if (a.armor <1) {t.ant = None} case None => }
+        t.ant match {
+          case Some(a) => if (a.armor <1) {t.ant = None} // wiping the board
+          case None => 
+        }
       }
       if (nextTurn) for (i <- Insects) {
         i match {
-          case a: Ant => a.attack()
+          case a: Ant => a.attack() //execute attack maneuver
           case b: Bee => b.move() //will attack if there's an ant
         }
       }

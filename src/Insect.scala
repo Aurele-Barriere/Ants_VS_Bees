@@ -17,6 +17,7 @@ class Insect(p: Place, ico: ImageIcon, arm: Int) {
     (location.pos.x < p.x && p.x < location.pos.x + width &&
       location.pos.y < p.y && p.y < location.pos.y + height)
   }
+  def reduceArmor():Unit = {}
 }
 
 class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
@@ -78,6 +79,7 @@ class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1,
         case Nil          => this.attacking(t)
         case l: List[Bee] => l.head.armor -= damage
       }
+      case e:Entrance =>
     }
   }
   override def attack() = { attacking(p) }
@@ -123,15 +125,10 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
 
 class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 3, 5) {
   damage = 3
-  def reduceArmor(): Unit = {
-    if (this.armor < 1) {
+  override def reduceArmor() = {
       for (b <- p.bees) {
         b.armor -= damage
-      }
     }
-  }
-  override def attack(): Unit = {
-    reduceArmor()
   }
 }
 
