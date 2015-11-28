@@ -21,6 +21,7 @@ object AntsBees extends SimpleSwingApplication {
     var nextTurn :Boolean = false 
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
+    val water_icon: ImageIcon = new ImageIcon("img/tunnel_water.png")
     val tun: Int = 8 //number of tunnel places
     var Insects: List[Insect] = Nil
     //Defining Cells :
@@ -37,7 +38,7 @@ object AntsBees extends SimpleSwingApplication {
     val t5: Tunnel = new Tunnel(new Point(4 * width, alt), t4, t6, tunnel_icon)
     val t6: Tunnel = new Tunnel(new Point(5 * width, alt), t5, t7, tunnel_icon)
     val t7: Tunnel = new Tunnel(new Point(6 * width, alt), t6, t8, tunnel_icon)
-    val t8: Tunnel = new Water(new Point(7 * width, alt), t7, entrance, tunnel_icon)
+    val t8: Tunnel = new Water(new Point(7 * width, alt), t7, entrance, water_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
     entrance.createbees(2)
    
@@ -58,7 +59,7 @@ object AntsBees extends SimpleSwingApplication {
     var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
     val hive = new Hive(C, t1)
 
-    val purse = new Purse(10)
+    val purse = new Purse(100)
     def update() = {
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
       for (t <- Tunnels) {

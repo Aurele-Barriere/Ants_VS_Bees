@@ -34,6 +34,14 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
               case h: Hive   => AntsBees.state.lost = true
             }
           }
+          case Some(a) if !a.blocksPath => { // ugly af I know, but pattern matching is a b****
+            t.removebee(this)
+            this.location = t.exit
+            t.exit match {
+              case s: Tunnel => s.addbee(this)
+              case h: Hive   => AntsBees.state.lost = true
+            }
+          }
           case Some(a) => (a.armor -= 1)
         }
       }
@@ -54,12 +62,7 @@ abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(
   val blocksPath = true
   def attack() = {}
 }
-/*
-class None(lo: Tunnel) extends Ant(new Point(0, 0), new ImageIcon("img/bee.png"), 100, 0, lo) {
-  override val watersafe = true // Would be problematic if empty cases ended up drowning
-}
- */
-//option type is better
+
 // Basic Units
 
 class Harvester(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2) {
