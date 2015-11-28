@@ -115,4 +115,15 @@ class Entrance(p: Point, t: Tunnel) extends Place(p) {
   def removebee(b: Bee) = {
     bees = bees diff List(b)
   }
+  def createbees(n :Int) :Unit = {
+    if (n> 0) {
+      val b = new Bee(this)
+      this.bees = b :: this.bees
+      AntsBees.state.Insects = b :: AntsBees.state.Insects
+      createbees(n-1)
+    }
+  }
+  
+  
+  
 }

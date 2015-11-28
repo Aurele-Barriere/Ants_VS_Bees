@@ -39,9 +39,7 @@ object AntsBees extends SimpleSwingApplication {
     val t7: Tunnel = new Tunnel(new Point(6 * width, alt), t6, t8, tunnel_icon)
     val t8: Tunnel = new Tunnel(new Point(7 * width, alt), t7, entrance, tunnel_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
-    val b = new Bee(entrance)
-    entrance.bees = List(b)
-    Insects = b :: Insects
+    entrance.createbees(12)
    
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
