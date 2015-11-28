@@ -5,7 +5,7 @@ import javax.swing.ImageIcon
 
 class Insect(p: Place, ico: ImageIcon, arm: Int) {
   var location: Place = p
-  val damage = 1 
+  var damage = 1 
   val icon: ImageIcon = ico
   val im = icon.getImage()
   val width: Int = icon.getIconWidth()
@@ -60,13 +60,14 @@ abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(
   //val location: Tunnel = lo
   val cost: Int = co
   val blocksPath = true
+  var buffed = false
   def attack() = {}
 }
 
 // Basic Units
 
 class Harvester(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png"), 1, 2) {
-  override val damage = 0
+  damage = 0
   override def attack() = { AntsBees.state.purse.add_money(1) }
 }
 
@@ -121,7 +122,7 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
 // Gimmicky ants
 
 class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 3, 5) {
-  override val damage: Int = 3
+  damage = 3
   def reduceArmor(): Unit = {
     if (this.armor < 1) {
       for (b <- p.bees) {
@@ -162,7 +163,7 @@ class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) 
 
 class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 1, 4) {
   var digesting = 0
-  override val damage = 0
+  damage = 0
   def eat(): Unit = {
     if (p.bees != Nil) {
       p.bees.head.armor = 0
@@ -191,5 +192,34 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 
 class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) {
   override val watersafe = true
+  buffed = true
+  def attacking(pl: Tunnel): Unit = {
+    pl.entrance match {
+      case t: Tunnel => {
+        t.bees match {
+          case Nil          => this.attacking(t)
+          case l: List[Bee] => l.head.armor -= damage
+        }
+      }
+    }
+  }
+  def inspire(pl:Tunnel): Unit = {
+    pl.entrance match {
+      case t:Tunnel => {
+        t.ant match {
+          case Some(a) if !a.buffed => {
+            a.buffed = true
+            a.damage += 2
+          }
+        }
+        inspire(t)
+      }
+      case e:Entrance =>
+    }
+  }
+  override def attack() = { 
+    attacking(p)
+    inspire(p)
+  }
 }
 
