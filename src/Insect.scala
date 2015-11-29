@@ -17,7 +17,7 @@ class Insect(p: Place, ico: ImageIcon, arm: Int) {
     (location.pos.x < p.x && p.x < location.pos.x + width &&
       location.pos.y < p.y && p.y < location.pos.y + height)
   }
-  def reduceArmor():Unit = {}
+  def reduceArmor():Unit = {} // Not sure about the name, pretty cool kiskool death effect
 }
 
 class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
@@ -76,7 +76,7 @@ class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1,
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
       case t: Tunnel => t.bees match {
-        case Nil          => this.attacking(t)
+        case Nil       => this.attacking(t)
         case l: List[Bee] => l.head.armor -= damage
       }
       case e:Entrance =>
@@ -91,7 +91,7 @@ class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrowe
     if (n > 0) {
       pl match {
         case t: Tunnel => t.bees match {
-          case Nil          => attacking(t.entrance, n - 1)
+          case Nil         => attacking(t.entrance, n - 1)
           case l: List[Bee] => l.head.armor -= damage
         }
       }

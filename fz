@@ -1,0 +1,271 @@
+[33mcommit b47679c04e861992a99da3b5aef0ea88ba805f96[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Sat Nov 28 23:02:36 2015 +0100
+
+    cleared a bit of code, fire now suicides properly, still looking into the thrower issue
+
+[33mcommit 387ec0d7078300b76f8606e51c25138eb3123d95[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Sat Nov 28 22:27:42 2015 +0100
+
+    All hail the queen! She now buffs her allies
+
+[33mcommit 3d5dd63302304b0aa0a6a4e7f60db970084c621f[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Sat Nov 28 20:39:34 2015 +0100
+
+    put water icon, ninja work correctly, working on a fix for the thrower type's attacks
+
+[33mcommit a06636a5e7b250b8d95eed2380d54f9854d1c9d0[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Sat Nov 28 19:51:28 2015 +0100
+
+    Created water subclass of tunnel, rightmost tunnel is now water
+
+[33mcommit 71b6af289acecef731af34354f704b50cc23db80[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Sat Nov 28 19:02:37 2015 +0100
+
+    tunnels are drawn before ants
+
+[33mcommit e53457b7ed0456d952da968abd06a0f307c728df[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Sat Nov 28 18:59:06 2015 +0100
+
+    new graphics by Alyssia Dong
+
+[33mcommit 10ee6472e29fd6b74776a05b3fb9408b22f69d4e[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Sat Nov 28 17:43:27 2015 +0100
+
+    better way to add bees
+
+[33mcommit d4d6b654e747658a3423a4e35cb89915d5afe3f8[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Sat Nov 28 11:19:48 2015 +0100
+
+    tunnels are empty when their ant dies
+
+[33mcommit 476330d4be4c560c93fe371d98a8750b2837ff53[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Sat Nov 28 10:55:28 2015 +0100
+
+    bees now move and kill
+
+[33mcommit 64ad367742a2d1220199455245538c992f5f95dd[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Sat Nov 28 10:13:29 2015 +0100
+
+    Insects doesn't need no position : don't mix logic and drawing and this was redundant with the location's position. Let's see where it goes
+
+[33mcommit 5eeddd48ba4f60bd07caeddaaeaff325df0add96[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Fri Nov 27 21:36:55 2015 +0100
+
+    made scubas attack, implemented water/ground gimmick, flagged some part for code cleaning
+
+[33mcommit 97b6a6cbe46f21d39545a9113b53358930f4c667[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Fri Nov 27 20:16:59 2015 +0100
+
+    Fixed Some ants' attacks
+
+[33mcommit 02df134454c924472e097ca00f88583063143e86[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Thu Nov 26 16:53:37 2015 +0100
+
+    still an issue with the bees
+
+[33mcommit f9e1428e28cf95a4b7536bedbc13ee065a31e280[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Thu Nov 26 11:11:01 2015 +0100
+
+    fixed the removal of an ant
+
+[33mcommit b70a1a335d04e6b07415188e4d12ecca995502f2[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Thu Nov 26 11:06:52 2015 +0100
+
+    option type is better to describe if a tunnel has an ant or not
+
+[33mcommit f676d5969f538cc7759c4f467dc739290529a90e[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 25 23:11:45 2015 +0100
+
+    hive is now a val, and still lazy
+
+[33mcommit 0a33bcacb4794260b179be0ae29b6fb84a644e0c[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 25 23:05:51 2015 +0100
+
+    you can now add ants to tunnels (not finished)
+
+[33mcommit 8af0e662ea4b89ac48252a10d932364d9aeb47cf[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 25 22:30:56 2015 +0100
+
+    re-written function to buy an ant
+
+[33mcommit c9ab0def1cf4caebe1094dd7d40aef88aee96479[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 25 22:14:13 2015 +0100
+
+    clickable Cells, state.hive.Cells is not a null pointer anymore, but is a var instead of a val
+
+[33mcommit d4c2cb9af00bbf81012279a2dbd7d003c04ed624[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 25 21:36:37 2015 +0100
+
+    few changes, having a hard time to use state.hive.Cells instead of state.C
+
+[33mcommit 4fcc75ea66ef64379e9f36fff05fced1f1833468[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Tue Nov 24 17:21:16 2015 +0100
+
+    couple changes : queen, places, have_lost
+
+[33mcommit f8b898423e5c5193d89bd5cc422feb19b5d950cd[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Tue Nov 24 09:53:40 2015 +0100
+
+    Changed some graphical details, added colony icons for all units, waterproof spec for insects
+
+[33mcommit 30ba470a086589a13f17d67581786a3fbd2e797f[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Mon Nov 23 17:27:11 2015 +0100
+
+    Added Hungry and Ninja gimmicks, blockPath property to Ants
+
+[33mcommit cd32e42de72334c50d297cb7b7378d9098cc61dd[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Sun Nov 22 17:00:09 2015 +0100
+
+    Added a local damage value to throwers and fire ant, updated longthrower with new def, implemented fire ant kamikazing
+
+[33mcommit 8f5e76fa217e63cd45694f17bbfc160e82b67ed5[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 22:01:31 2015 +0100
+
+    re-written overriding method attacks to fit the new definition of places
+
+[33mcommit 2c1ad4a80dce56ca2740465da1bd0fb03f0533e9[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 21:15:02 2015 +0100
+
+    this now works with lazy declarations. for some reason, I can't draw the cells from state.hive.Cells, but from stats.C
+
+[33mcommit 8927d31db53af42a15838fda44d18e3614ca955d[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 21:06:47 2015 +0100
+
+    lazy declaration of all places. this doesn't work for now :(
+
+[33mcommit 58b022aff4e703d39c218829677bf2c133493260[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 20:38:24 2015 +0100
+
+    Places entrances and exits are now lazy for declaration
+
+[33mcommit b56fc840de1497332da8cc14f7295ff4f09394f9[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 20:32:37 2015 +0100
+
+    Places do not need no name! will fix places with lazy exit and entrances for circular definition
+
+[33mcommit 2aacba1412ff89c8249c19aba2419ce1600a97a2[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 13:51:40 2015 +0100
+
+    cleaning again
+
+[33mcommit 92c35b08ed570a696550648a444bda14217f6c6b[m
+Merge: 8eb28a4 3607cb3
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 13:46:52 2015 +0100
+
+    nettoyage!
+
+[33mcommit 8eb28a41b4030b05ffdf7a1ff6ad8c892cdf4270[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 13:41:55 2015 +0100
+
+    added .gitignore to ignore all bin/*
+
+[33mcommit 3607cb3760c5d9cc824383efc4b87d0c75b01201[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Fri Nov 20 12:19:29 2015 +0100
+
+    Ants can now throw stuff, hopefully
+
+[33mcommit cba35175fbaa4e4a18c44fe938f816addc039dd4[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 11:29:11 2015 +0100
+
+    overriding method attacks for some ants
+
+[33mcommit a433df02f91f0b9b3dfc8fac7426678554a7c9b3[m
+Merge: c90a552 83835c2
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Fri Nov 20 11:12:55 2015 +0100
+
+    Insects added,again
+
+[33mcommit c90a55266a2ac8b1f6fd5f34121c0d018976c58c[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Fri Nov 20 11:11:18 2015 +0100
+
+    Insects shells added
+
+[33mcommit 83835c23b656b3860900c360220fce9793313963[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 11:10:26 2015 +0100
+
+    added a way to detect neighbours of a tunnel
+
+[33mcommit 4c41aa97991b5c1f987ff445aa870565dbc833d2[m
+Author: Remy Sun <Remy.Sun@ens-rennes.fr>
+Date:   Fri Nov 20 10:39:55 2015 +0100
+
+    longthrower added
+
+[33mcommit c0b3f81c7cda57d83927fd9eabdde031d30d1e2e[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Fri Nov 20 10:27:30 2015 +0100
+
+    trying to help
+
+[33mcommit d52de16a99fba8d1ac03f42d92fc2ffac3a51914[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Thu Nov 19 20:30:11 2015 +0100
+
+    re-written most of the beginning code to fit into our objective : the Ants VS Bees game
+
+[33mcommit f15a03034272d93c78928b44bc00332930fd31f6[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Thu Nov 19 10:33:11 2015 +0100
+
+    a place can be a tunnel, a hive or a cell(in a hive)
+
+[33mcommit 3316f2c6ca269a541681a7555338014a2aa74821[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 18 23:08:50 2015 +0100
+
+    new classes Place and Tunnel
+
+[33mcommit ae8e451a870da8c6a55b588c0397331f01376bec[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 18 09:33:49 2015 +0100
+
+    DemoApp cleaned up to use the Insect class
+
+[33mcommit 2468f845b94967dccae3a42b97c14285331feea6[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 18 08:11:33 2015 +0100
+
+    this is now a scalaIDE project
+
+[33mcommit 051b51a15be8c8272a50de8a64aad8db0c247b42[m
+Author: Aurèle <aurele.barriere@gmail.com>
+Date:   Wed Nov 18 08:00:50 2015 +0100
+
+    first commit

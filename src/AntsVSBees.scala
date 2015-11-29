@@ -17,6 +17,7 @@ object AntsBees extends SimpleSwingApplication {
   ////////////////////////////////////////////////////
 
   object state {
+    var timer = 0 // timer to emulate real time
     var lost: Boolean = false //have we lost the game?
     var nextTurn :Boolean = false 
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
@@ -40,7 +41,7 @@ object AntsBees extends SimpleSwingApplication {
     val t7: Tunnel = new Tunnel(new Point(6 * width, alt), t6, t8, tunnel_icon)
     val t8: Tunnel = new Water(new Point(7 * width, alt), t7, entrance, water_icon)
     val entrance = new Entrance(new Point(8 * width, alt), t8)
-    entrance.createbees(2)
+    entrance.createbees(1)
    
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
@@ -78,8 +79,14 @@ object AntsBees extends SimpleSwingApplication {
           case a: Ant => a.attack() //execute attack maneuver
           case b: Bee => b.move() //will attack if there's an ant
         }
+        timer = 150
       }
      nextTurn = false // leave the player some time
+     if (timer == 0) { // time is ticking! 
+        nextTurn = true
+      } else {
+        timer -= 1
+      }
     }
     /* reset(): empties the screen */
     def reset() = {
