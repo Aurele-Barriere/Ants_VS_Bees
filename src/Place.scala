@@ -79,17 +79,17 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   val typeant: Ant = t
 
   override def buy_ant(p: Purse, tun: Tunnel) = {
-    if (AntsBees.state.purse.money > this.typeant.cost && tun.ant == None && (this.typeant.watersafe || tun.ground)) {
+    if (AntsBees.state.purse.money > this.typeant.cost && (this.typeant.watersafe || tun.ground)) {
     this.typeant match {
-      case a: Harvester     => tun.ant = Some(new Harvester(tun))
-      case a: Thrower       => tun.ant = Some(new Thrower(tun))
-      case a: Short_Thrower => tun.ant = Some(new Short_Thrower(tun))
-      case a: Long_Thrower  => tun.ant = Some(new Long_Thrower(tun))
-      case a: Fire          => tun.ant = Some(new Fire(tun))
-      case a: Scuba         => tun.ant = Some(new Scuba(tun))
-      case a: Ninja         => tun.ant = Some(new Ninja(tun))
-      case a: Hungry        => tun.ant = Some(new Hungry(tun))
-      case a: Queen         => tun.ant = Some(new Queen(tun))
+      case a: Harvester     => tun.addant(new Harvester(tun))
+      case a: Thrower       => tun.addant(new Thrower(tun))
+      case a: Short_Thrower => tun.addant(new Short_Thrower(tun))
+      case a: Long_Thrower  => tun.addant(new Long_Thrower(tun))
+      case a: Fire          => tun.addant(new Fire(tun))
+      case a: Scuba         => tun.addant(new Scuba(tun))
+      case a: Ninja         => tun.addant(new Ninja(tun))
+      case a: Hungry        => tun.addant(new Hungry(tun))
+      case a: Queen         => tun.addant(new Queen(tun))
 
       //to do? or is there a more simpler way? 
     }
