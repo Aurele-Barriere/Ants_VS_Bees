@@ -40,7 +40,7 @@ object AntsBees extends SimpleSwingApplication {
     for (i <- 0 to (tun-2)) {
       Tunnels.apply(i).entrance = Tunnels.apply(i+1)
     }
-    val entrance = new Entrance(new Point(tun * width, alt), Tunnels.last)
+    val entrance = new Entrance(new Point(tun * width, alt), Tunnels.head)
     Tunnels.last.entrance = entrance
    
     entrance.createbees(1)
@@ -67,7 +67,7 @@ object AntsBees extends SimpleSwingApplication {
     def update() = {
       for (i <- Insects) {
         if (i.armor <= 0) {
-          i.reduceArmor()
+          i.reduceArmor() //qu'est ce que c'est que ce truc? a quoi ca sert? combien ca coute? ca sera toujours utile dans une semaine?
         }
       }
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
