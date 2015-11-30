@@ -43,7 +43,7 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
               case h: Hive   => AntsBees.state.lost = true
             }
           }
-          case Some(a) => (a.armor -= 1)
+          case Some(a) => (a.armor -= damage)
         }
       }
       case e: Entrance =>
@@ -61,6 +61,7 @@ abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(
   //val location: Tunnel = lo
   val cost: Int = co
   val blocksPath = true
+  val unique = false
   var buffed = false
   def attack() = {}
 }
@@ -146,7 +147,7 @@ class Scuba(p :Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 1, 5) 
 }
 
 class Wall(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4) {
-
+  damage = 0 
 }
 
 class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) {
@@ -188,6 +189,7 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 // Here comes the queen
 
 class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) {
+  override val unique = true
   override val watersafe = true
   buffed = true
   def attacking(pl: Tunnel): Unit = {
@@ -199,6 +201,9 @@ class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) 
         }
       }
     }
+  }
+  override def reduceArmor() = {
+    AntsBees.state.lost = true
   }
   def inspire(pl:Tunnel): Unit = {
     pl.entrance match {
@@ -214,9 +219,16 @@ class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) 
       case e:Entrance =>
     }
   }
+  def impostor(): Unit = {
+    if (AntsBees.state.uniqueUnits > 1) {
+      this.armor = 0
+      AntsBees.state.uniqueUnits -= 1 
+    }
+  }
   override def attack() = { 
-    attacking(p)
-    inspire(p)
+    //attacking(p)
+    //inspire(p)
+    impostor()
   }
 }
 

@@ -30,7 +30,11 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     ant = None
   }
   def addant(t: Ant) {
-    if (ant == None) {ant = Some(t)}
+    if (ant == None) {
+      ant = Some(t)}
+      if (t.unique) {
+        AntsBees.state.uniqueUnits += 1
+      }
   }
 // deprecated neighbour code? You might want to check on this
   def left_neighbour(n: Int): Place = {

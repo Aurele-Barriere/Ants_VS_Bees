@@ -18,6 +18,7 @@ object AntsBees extends SimpleSwingApplication {
 
   object state {
     var timer = 0 // timer to emulate real time
+    var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
     var nextTurn :Boolean = false 
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
