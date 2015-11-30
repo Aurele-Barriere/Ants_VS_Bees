@@ -119,7 +119,7 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
     
     if (n > 0) {
       pl match { case t : Tunnel => charging (t.entrance, n-1) case e:Entrance => }
-      //charging(pl, n - 1)
+    
     } else {
       attacking(pl)
     }

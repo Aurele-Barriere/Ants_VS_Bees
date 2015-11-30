@@ -3,24 +3,33 @@
 // Compile with: scalac -cp scala-swing.jar:. FirstTest.scala
 // Then execute with: scala -cp scala-swing.jar:. FirstTest
 
-import scala.swing._
-import scala.swing.{ SimpleSwingApplication, MainFrame, Panel }
-import scala.swing.event._
-import java.awt.event.{ ActionEvent, ActionListener }
-import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
-import javax.swing.{ ImageIcon, Timer }
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.geom
 
+import scala.swing.Dimension
+import scala.swing.MainFrame
+import scala.swing.Panel
+import scala.swing.SimpleSwingApplication
+import scala.swing.event.FocusLost
+import scala.swing.event.KeyTyped
+import scala.swing.event.MousePressed
+
+import javax.swing.ImageIcon
+import javax.swing.Timer
 
 object AntsBees extends SimpleSwingApplication {
 
   // Part 1: The data describing the state of the game
 
-
   object state {
     var timer = 0 // timer to emulate real time
     var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
-    var nextTurn :Boolean = false 
+    var nextTurn: Boolean = false
     val tunnel_icon: ImageIcon = new ImageIcon("img/tunnel.png")
     val tunnel_im = tunnel_icon.getImage()
     val water_icon: ImageIcon = new ImageIcon("img/tunnel_water.png")
@@ -33,19 +42,19 @@ object AntsBees extends SimpleSwingApplication {
     val alt = 300 //where is the tunnel on the y-axis
     val t0: Tunnel = new Tunnel(nulpoint, null, null, tunnel_icon) //just a place to put the insects in the hive
     val t1: Tunnel = new Tunnel(new Point(0, alt), t0, t0, tunnel_icon)
-   
+
     var Tunnels = List(t1)
     for (i <- 2 to tun) {
-      Tunnels = new Tunnel(new Point(width * (i-1),alt), Tunnels.head, t0, tunnel_icon) :: Tunnels
+      Tunnels = new Tunnel(new Point(width * (i - 1), alt), Tunnels.head, t0, tunnel_icon) :: Tunnels
     }
-    for (i <- 1 to (tun-1)) {
-      Tunnels.apply(i).entrance = Tunnels.apply(i-1)
+    for (i <- 1 to (tun - 1)) {
+      Tunnels.apply(i).entrance = Tunnels.apply(i - 1)
     }
     val entrance = new Entrance(new Point(tun * width, alt), Tunnels.head)
     Tunnels.head.entrance = entrance
-   
-    entrance.createbees(2)
-   
+
+    //entrance.createbees(2)
+
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
     val thrower = new CellAnt(new Point(150, 50), new Thrower(t0))
@@ -60,12 +69,16 @@ object AntsBees extends SimpleSwingApplication {
     val queen = new CellAnt(new Point(350, 150), new Queen(t0))
     val bye = new Bye(new Point(450, 150))
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
-   
+
     val hive = new Hive(C, t1)
     t1.exit = hive
 
+    val rng = scala.util.Random
+    var frequency = 1
+
     val purse = new Purse(100)
     def update() = {
+
       for (i <- Insects) {
         if (i.armor <= 0) {
           i.reduceArmor() //qu'est ce que c'est que ce truc? a quoi ca sert? combien ca coute? ca sera toujours utile dans une semaine?
@@ -74,22 +87,28 @@ object AntsBees extends SimpleSwingApplication {
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
       for (t <- Tunnels) {
         t.ant match {
-          case Some(a) => if (a.armor <1) {t.ant = None} // wiping the board
-          case None => 
+          case Some(a) => if (a.armor < 1) { t.ant = None } // wiping the board
+          case None    =>
         }
       }
+      if (nextTurn) {
+        if (rng.nextInt(100) < frequency) { println ("go!"); entrance.createbees(1) }
+        frequency += 1
+        println("frequency" + frequency.toString())
+      }
       if (nextTurn) for (i <- Insects) {
+
         i match {
-          case a: Ant => a.attack() 
+          case a: Ant => a.attack()
           case b: Bee => b.move() //will attack if there's an ant
         }
         timer = 50 //one second between each turn
       }
-     nextTurn = false 
-     if (timer == 0) {  
+      nextTurn = false
+      if (timer == 0) {
         nextTurn = true
       } else {
-        timer -= 0
+        timer -= 1
       }
     }
     /* reset(): empties the screen */
@@ -117,16 +136,13 @@ object AntsBees extends SimpleSwingApplication {
       case e: MousePressed =>
         on_click()
 
-        
         requestFocusInWindow()
-      
+
       case KeyTyped(_, 'c', _, _) => state.reset()
-      case KeyTyped(_, 'n', _, _) => state.nextTurn = true 
-      
+      case KeyTyped(_, 'n', _, _) => state.nextTurn = true
+
       case _: FocusLost           => repaint()
     }
-
-    
 
     /* How to draw the screen when instructed to do so */
     override def paintComponent(g: Graphics2D) = {
@@ -136,7 +152,7 @@ object AntsBees extends SimpleSwingApplication {
       val pos = getPos()
       if (pos != null)
         g.drawString("food : " + state.purse.money, size.width - 200, 10)
-      if (state.lost) {g.drawString("lost", 400,500)}
+      if (state.lost) { g.drawString("lost", 400, 500) }
       g.setColor(Color.black)
       //g.draw(boxPath)
       for (t <- state.Tunnels) {
@@ -145,7 +161,7 @@ object AntsBees extends SimpleSwingApplication {
       for (ins <- state.Insects) {
         g.drawImage(ins.im, ins.location.pos.x, ins.location.pos.y, peer)
       }
-      
+
       for (c <- state.hive.Cells) {
         c match {
           case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
