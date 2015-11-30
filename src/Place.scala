@@ -36,7 +36,7 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         AntsBees.state.uniqueUnits += 1
       }
   }
-// deprecated neighbour code? You might want to check on this
+// deprecated neighbour code? You might want to check on this. Yes I don't think we will use it. 
   def left_neighbour(n: Int): Place = {
     n match {
       case 0 => return this

@@ -38,13 +38,13 @@ object AntsBees extends SimpleSwingApplication {
     for (i <- 2 to tun) {
       Tunnels = new Tunnel(new Point(width * (i-1),alt), Tunnels.head, t0, tunnel_icon) :: Tunnels
     }
-    for (i <- 0 to (tun-2)) {
-      Tunnels.apply(i).entrance = Tunnels.apply(i+1)
+    for (i <- 1 to (tun-1)) {
+      Tunnels.apply(i).entrance = Tunnels.apply(i-1)
     }
     val entrance = new Entrance(new Point(tun * width, alt), Tunnels.head)
-    Tunnels.last.entrance = entrance
+    Tunnels.head.entrance = entrance
    
-    entrance.createbees(1)
+    entrance.createbees(2)
    
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
@@ -89,7 +89,7 @@ object AntsBees extends SimpleSwingApplication {
      if (timer == 0) {  
         nextTurn = true
       } else {
-        timer -= 1
+        timer -= 0
       }
     }
     /* reset(): empties the screen */
