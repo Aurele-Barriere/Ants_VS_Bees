@@ -1,4 +1,4 @@
-// This demonstrates the major Scala Swing functionalities that we need in this project
+/* This project is proudly presented to you by Aurèle Barrière and Rémy Sun for PROG1 */
 
 // Compile with: scalac -cp scala-swing.jar:. FirstTest.scala
 // Then execute with: scala -cp scala-swing.jar:. FirstTest
@@ -10,11 +10,11 @@ import java.awt.event.{ ActionEvent, ActionListener }
 import java.awt.{ Color, Graphics2D, Point, geom, MouseInfo }
 import javax.swing.{ ImageIcon, Timer }
 
-// That object is your application
+
 object AntsBees extends SimpleSwingApplication {
 
   // Part 1: The data describing the state of the game
-  ////////////////////////////////////////////////////
+
 
   object state {
     var timer = 0 // timer to emulate real time
@@ -25,6 +25,7 @@ object AntsBees extends SimpleSwingApplication {
     val tunnel_im = tunnel_icon.getImage()
     val water_icon: ImageIcon = new ImageIcon("img/tunnel_water.png")
     val tun: Int = 8 //number of tunnel places
+
     var Insects: List[Insect] = Nil
     //Defining Cells :
     val nulpoint = new Point(0, 0)
@@ -59,7 +60,7 @@ object AntsBees extends SimpleSwingApplication {
     val queen = new CellAnt(new Point(350, 150), new Queen(t0))
     val bye = new Bye(new Point(450, 150))
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
-    //var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
+   
     val hive = new Hive(C, t1)
     t1.exit = hive
 
@@ -79,13 +80,13 @@ object AntsBees extends SimpleSwingApplication {
       }
       if (nextTurn) for (i <- Insects) {
         i match {
-          case a: Ant => a.attack() //execute attack maneuver
+          case a: Ant => a.attack() 
           case b: Bee => b.move() //will attack if there's an ant
         }
-        timer = 150
+        timer = 50 //one second between each turn
       }
-     nextTurn = false // leave the player some time
-     if (timer == 0) { // time is ticking! 
+     nextTurn = false 
+     if (timer == 0) {  
         nextTurn = true
       } else {
         timer -= 1
@@ -98,7 +99,6 @@ object AntsBees extends SimpleSwingApplication {
   }
 
   // Part 2: the User Interface: main panel on which we will paint everything 
-  /////////////////////////////
 
   // In input, it reacts to clicks and key pressed. In output, it draws the game state on itself when asked to 
   lazy val ui = new Panel {
@@ -117,27 +117,22 @@ object AntsBees extends SimpleSwingApplication {
       case e: MousePressed =>
         on_click()
 
-        //state.removeSpriteAt(e.point)
+        
         requestFocusInWindow()
-      case e: MouseDragged        => /* Nothing for now */
-      case e: MouseReleased       => /* Nothing for now */
+      
       case KeyTyped(_, 'c', _, _) => state.reset()
       case KeyTyped(_, 'n', _, _) => state.nextTurn = true 
-      //case KeyTyped(_, 'a', _, _) => state.speedIncrease()
-      //case KeyTyped(_, 'z', _, _) => state.speedDecrease()
-
+      
       case _: FocusLost           => repaint()
     }
 
-    /* Returns the current position of the mouse (or null if it's not over the panel */
-
-    /* A nice box */
+    
 
     /* How to draw the screen when instructed to do so */
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       g.setColor(new Color(100, 100, 100))
-      //g.drawString(" Press 'i' to add sprites, 'c' to remove them all. Click on sprite to destroy them", 10, size.height - 10)
+      g.drawString(" Press 'n' to add sprites for a newt turn", 10, size.height - 10)
       val pos = getPos()
       if (pos != null)
         g.drawString("food : " + state.purse.money, size.width - 200, 10)
@@ -159,9 +154,9 @@ object AntsBees extends SimpleSwingApplication {
         if (c.is_selected) {
           val boxPath = new geom.GeneralPath
           boxPath.moveTo(c.pos.x, c.pos.y)
-          boxPath.lineTo(c.pos.x + 100, c.pos.y)
-          boxPath.lineTo(c.pos.x + 100, c.pos.y + 100)
-          boxPath.lineTo(c.pos.x, c.pos.y + 100)
+          boxPath.lineTo(c.pos.x + c.width, c.pos.y)
+          boxPath.lineTo(c.pos.x + c.width, c.pos.y + c.height)
+          boxPath.lineTo(c.pos.x, c.pos.y + c.height)
           boxPath.lineTo(c.pos.x, c.pos.y)
           g.draw(boxPath)
         }
@@ -191,7 +186,7 @@ object AntsBees extends SimpleSwingApplication {
   val t = new MyTimer()
 
   // Part 4: Main initialization: Create a new window and populate it
-  //////////////////////////////
+
   def top = new MainFrame {
     title = "Ants VS Bees"
     contents = ui
