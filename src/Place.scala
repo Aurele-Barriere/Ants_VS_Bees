@@ -8,8 +8,8 @@ class Place(p: Point) {
 }
 
 class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
-  lazy val exit: Place = ex
-  lazy val entrance: Place = en
+  var exit: Place = ex
+  var entrance: Place = en //this might be ugly, but lazy declaration doesn't work for now
   val ground = true
   var ant: Option[Ant] = None
   var bees: List[Bee] = Nil

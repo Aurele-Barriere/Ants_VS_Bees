@@ -28,20 +28,21 @@ object AntsBees extends SimpleSwingApplication {
     var Insects: List[Insect] = Nil
     //Defining Cells :
     val nulpoint = new Point(0, 0)
-
-    //var hive = new Hive(C, t1: Tunnel)
     val width = tunnel_icon.getIconWidth()
     val alt = 300 //where is the tunnel on the y-axis
     val t0: Tunnel = new Tunnel(nulpoint, null, null, tunnel_icon) //just a place to put the insects in the hive
-    val t1: Tunnel = new Tunnel(new Point(0, alt), hive, t2, tunnel_icon)
-    val t2: Tunnel = new Tunnel(new Point(width, alt), t1, t3, tunnel_icon)
-    val t3: Tunnel = new Tunnel(new Point(2 * width, alt), t2, t4, tunnel_icon)
-    val t4: Tunnel = new Tunnel(new Point(3 * width, alt), t3, t5, tunnel_icon)
-    val t5: Tunnel = new Tunnel(new Point(4 * width, alt), t4, t6, tunnel_icon)
-    val t6: Tunnel = new Tunnel(new Point(5 * width, alt), t5, t7, tunnel_icon)
-    val t7: Tunnel = new Tunnel(new Point(6 * width, alt), t6, t8, tunnel_icon)
-    val t8: Tunnel = new Water(new Point(7 * width, alt), t7, entrance, water_icon)
-    val entrance = new Entrance(new Point(8 * width, alt), t8)
+    val t1: Tunnel = new Tunnel(new Point(0, alt), t0, t0, tunnel_icon)
+   
+    var Tunnels = List(t1)
+    for (i <- 2 to tun) {
+      Tunnels = new Tunnel(new Point(width * (i-1),alt), Tunnels.head, t0, tunnel_icon) :: Tunnels
+    }
+    for (i <- 0 to (tun-2)) {
+      Tunnels.apply(i).entrance = Tunnels.apply(i+1)
+    }
+    val entrance = new Entrance(new Point(tun * width, alt), Tunnels.last)
+    Tunnels.last.entrance = entrance
+   
     entrance.createbees(1)
    
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
@@ -58,8 +59,9 @@ object AntsBees extends SimpleSwingApplication {
     val queen = new CellAnt(new Point(350, 150), new Queen(t0))
     val bye = new Bye(new Point(450, 150))
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
-    var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
+    //var Tunnels: List[Tunnel] = List(t1, t2, t3, t4, t5, t6, t7, t8)
     val hive = new Hive(C, t1)
+    t1.exit = hive
 
     val purse = new Purse(100)
     def update() = {
