@@ -197,6 +197,7 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
   override def onDeath() = {
     this.ant match {
       case Some(a) => p.ant = Some(a)
+      case None => p.ant = None
     }
   }
 }

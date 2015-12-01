@@ -41,8 +41,13 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
           t.ant = Some(a)
           ant = Some(t)
         }
+        if (a.canContain(t)) {
+          a.ant = Some(t)
+          ant = Some(a)
+        }
       }
     }
+        AntsBees.state.Insects = t :: AntsBees.state.Insects
   }
 // deprecated neighbour code? You might want to check on this. Yes I don't think we will use it. 
   def left_neighbour(n: Int): Place = {
@@ -100,17 +105,13 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
       case a: Scuba         => tun.addant(new Scuba(tun))
       case a: Ninja         => tun.addant(new Ninja(tun))
       case a: Hungry        => tun.addant(new Hungry(tun))
+      case a: Wall          => tun.addant(new Wall(tun))
       case a: Bodyguard     => tun.addant(new Bodyguard(tun))
       case a: Queen         => tun.addant(new Queen(tun))
 
       //to do? or is there a more simpler way? 
     }
-    tun.ant match {
-      case Some(a) => 
-        AntsBees.state.Insects = a :: AntsBees.state.Insects
-        AntsBees.state.purse.money -= this.typeant.cost //taking money
-      case None =>     
-    }
+    AntsBees.state.purse.money -= this.typeant.cost //taking money    
    }
   }
 }
