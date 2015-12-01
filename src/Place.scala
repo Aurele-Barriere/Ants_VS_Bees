@@ -25,17 +25,19 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   def removebee(b: Bee) = {
     bees = bees diff List(b)
   }
-  def removeant ()= {
-    ant match {case Some(a) => a.armor = 0 case None => }
+  def removeant() = {
+    ant match { case Some(a) => a.armor = 0 case None => }
     ant = None
   }
   def addant(t: Ant) {
     ant match {
-      case None => {
-        ant = Some(t)}
+      case None =>
+        {
+          ant = Some(t)
+        }
         if (t.unique) {
-        AntsBees.state.uniqueUnits += 1
-      }
+          AntsBees.state.uniqueUnits += 1
+        }
       case Some(a) => {
         if (t.canContain(a)) {
           t.ant = Some(a)
@@ -47,9 +49,9 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         }
       }
     }
-        AntsBees.state.Insects = t :: AntsBees.state.Insects
+    AntsBees.state.Insects = t :: AntsBees.state.Insects
   }
-// deprecated neighbour code? You might want to check on this. Yes I don't think we will use it. 
+  // deprecated neighbour code? You might want to check on this. Yes I don't think we will use it. 
   def left_neighbour(n: Int): Place = {
     n match {
       case 0 => return this
@@ -88,7 +90,7 @@ class Bye(p: Point) extends Cell(p) {
 }
 
 class Water(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Tunnel(p, ex, en, ico) {
-  override val ground = false  
+  override val ground = false
 }
 
 class CellAnt(p: Point, t: Ant) extends Cell(p) {
@@ -96,23 +98,23 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
 
   override def buy_ant(p: Purse, tun: Tunnel) = {
     if (AntsBees.state.purse.money > this.typeant.cost && (this.typeant.watersafe || tun.ground)) {
-    this.typeant match {
-      case a: Harvester     => tun.addant(new Harvester(tun))
-      case a: Thrower       => tun.addant(new Thrower(tun))
-      case a: Short_Thrower => tun.addant(new Short_Thrower(tun))
-      case a: Long_Thrower  => tun.addant(new Long_Thrower(tun))
-      case a: Fire          => tun.addant(new Fire(tun))
-      case a: Scuba         => tun.addant(new Scuba(tun))
-      case a: Ninja         => tun.addant(new Ninja(tun))
-      case a: Hungry        => tun.addant(new Hungry(tun))
-      case a: Wall          => tun.addant(new Wall(tun))
-      case a: Bodyguard     => tun.addant(new Bodyguard(tun))
-      case a: Queen         => tun.addant(new Queen(tun))
+      this.typeant match {
+        case a: Harvester     => tun.addant(new Harvester(tun))
+        case a: Thrower       => tun.addant(new Thrower(tun))
+        case a: Short_Thrower => tun.addant(new Short_Thrower(tun))
+        case a: Long_Thrower  => tun.addant(new Long_Thrower(tun))
+        case a: Fire          => tun.addant(new Fire(tun))
+        case a: Scuba         => tun.addant(new Scuba(tun))
+        case a: Ninja         => tun.addant(new Ninja(tun))
+        case a: Hungry        => tun.addant(new Hungry(tun))
+        case a: Wall          => tun.addant(new Wall(tun))
+        case a: Bodyguard     => tun.addant(new Bodyguard(tun))
+        case a: Queen         => tun.addant(new Queen(tun))
 
-      //to do? or is there a more simpler way? 
+        //to do? or is there a more simpler way? 
+      }
+      AntsBees.state.purse.money -= this.typeant.cost //taking money    
     }
-    AntsBees.state.purse.money -= this.typeant.cost //taking money    
-   }
   }
 }
 class Hive(L: List[Cell], t: Tunnel) extends Place(new Point(0, 0)) {
@@ -132,15 +134,36 @@ class Entrance(p: Point, t: Tunnel) extends Place(p) {
   def removebee(b: Bee) = {
     bees = bees diff List(b)
   }
-  def createbees(n :Int) :Unit = {
-    if (n> 0) {
+  def createbees(n: Int): Unit = {
+    if (n > 0) {
       val b = new Bee(this)
       this.bees = b :: this.bees
       AntsBees.state.Insects = b :: AntsBees.state.Insects
-      createbees(n-1)
+      createbees(n - 1)
     }
   }
-  
-  
-  
+}
+
+class Cave(alt: Int, h: Hive, tun: Int) {
+  val altitude: Int = alt
+  val hive: Hive = h
+  val numTunnels: Int = tun
+  var Tunnels: List[Tunnel] = Nil
+  val tunnelIcon: ImageIcon = new ImageIcon("img/tunnel.png")
+  val width = tunnelIcon.getIconWidth()
+  val height = tunnelIcon.getIconHeight()
+  //val tunnel_im = tunnel_icon.getImage()
+  val water_icon: ImageIcon = new ImageIcon("img/tunnel_water.png")
+  val t0 = new Tunnel(new Point(0, 0), null, null, tunnelIcon)
+  var t1 = new Tunnel(new Point(0, alt + 300), t0, t0, tunnelIcon)
+  Tunnels = t1 :: Tunnels
+  for (i <- 2 to tun) {
+    Tunnels = new Tunnel(new Point(width * (i - 1), alt + 300), Tunnels.head, t0, tunnelIcon) :: Tunnels
+  }
+  for (i <- 1 to (tun - 1)) {
+    Tunnels.apply(i).entrance = Tunnels.apply(i - 1)
+  }
+  val entrance = new Entrance(new Point(tun * width, alt), Tunnels.head)
+  Tunnels.head.entrance = entrance
+
 }
