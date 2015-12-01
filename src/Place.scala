@@ -30,11 +30,19 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     ant = None
   }
   def addant(t: Ant) {
-    if (ant == None) {
-      ant = Some(t)}
-      if (t.unique) {
+    ant match {
+      case None => {
+        ant = Some(t)}
+        if (t.unique) {
         AntsBees.state.uniqueUnits += 1
       }
+      case Some(a) => {
+        if (t.canContain(a)) {
+          t.ant = Some(a)
+          ant = Some(t)
+        }
+      }
+    }
   }
 // deprecated neighbour code? You might want to check on this. Yes I don't think we will use it. 
   def left_neighbour(n: Int): Place = {
@@ -65,7 +73,6 @@ class Cell(p: Point) extends Place(p) {
     if (click.x < p.x + width && click.x > p.x && click.y < p.y + height && click.y > p.y) { true } else { false }
   }
   def buy_ant(p: Purse, tun: Tunnel) = {
-
   }
 }
 
@@ -93,6 +100,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
       case a: Scuba         => tun.addant(new Scuba(tun))
       case a: Ninja         => tun.addant(new Ninja(tun))
       case a: Hungry        => tun.addant(new Hungry(tun))
+      case a: Bodyguard     => tun.addant(new Bodyguard(tun))
       case a: Queen         => tun.addant(new Queen(tun))
 
       //to do? or is there a more simpler way? 

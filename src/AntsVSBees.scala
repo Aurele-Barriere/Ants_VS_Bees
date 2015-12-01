@@ -53,8 +53,6 @@ object AntsBees extends SimpleSwingApplication {
     val entrance = new Entrance(new Point(tun * width, alt), Tunnels.head)
     Tunnels.head.entrance = entrance
 
-    //entrance.createbees(2)
-
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
     val thrower = new CellAnt(new Point(150, 50), new Thrower(t0))
@@ -78,16 +76,13 @@ object AntsBees extends SimpleSwingApplication {
 
     val purse = new Purse(100)
     def update() = {
-
-      for (i <- Insects) {
-        if (i.armor <= 0) {
-          i.reduceArmor() //qu'est ce que c'est que ce truc? a quoi ca sert? combien ca coute? ca sera toujours utile dans une semaine?
-        }
-      }
       Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
       for (t <- Tunnels) {
         t.ant match {
-          case Some(a) => if (a.armor < 1) { t.ant = None } // wiping the board
+          case Some(a) => if (a.armor < 1) { 
+            t.ant = None //wiping the board
+            a.onDeath() // Death effect
+            }
           case None    =>
         }
       }
@@ -102,7 +97,7 @@ object AntsBees extends SimpleSwingApplication {
           case a: Ant => a.attack()
           case b: Bee => b.move() //will attack if there's an ant
         }
-        timer = 50 //one second between each turn
+        timer = 50 //one second between each turn // alright, do not forget you can up that for testing
       }
       nextTurn = false
       if (timer == 0) {
