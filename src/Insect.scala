@@ -17,7 +17,7 @@ class Insect(p: Place, ico: ImageIcon, arm: Int) {
     (location.pos.x < p.x && p.x < location.pos.x + width &&
       location.pos.y < p.y && p.y < location.pos.y + height)
   }
-  def reduceArmor():Unit = {} // Not sure about the name, pretty cool kiskool death effect
+  def onDeath():Unit = {} // Not sure about the name, pretty cool kiskool death effect
 }
 
 class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
@@ -59,11 +59,16 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
 
 abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(p, ico, arm) {
   //val location: Tunnel = lo
+  val container = false
+  var ant: Option[Ant] = None // For containers
   val cost: Int = co
   val blocksPath = true
   val unique = false
   var buffed = false
   def attack() = {}
+  def canContain(t:Ant):Boolean = {
+    this.container && !t.container && this.ant == None
+  }
 }
 
 // Basic Units
@@ -131,7 +136,7 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
 
 class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 3, 5) {
   damage = 3
-  override def reduceArmor() = {
+  override def onDeath() = {
       for (b <- p.bees) {
         b.armor -= damage
     }
@@ -188,7 +193,13 @@ class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 1, 4
 }
 
 class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2, 4) {
-
+  override val container = true
+  override def onDeath() = {
+    this.ant match {
+      case Some(a) => p.ant = Some(a)
+      case None => p.ant = None
+    }
+  }
 }
 
 // Here comes the queen
@@ -207,7 +218,7 @@ class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) 
       }
     }
   }
-  override def reduceArmor() = {
+  override def onDeath() = {
     AntsBees.state.lost = true
   }
   def inspire(pl:Tunnel): Unit = {
