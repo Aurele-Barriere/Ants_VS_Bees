@@ -145,13 +145,14 @@ class Entrance(p: Point, t: Tunnel) extends Place(p) {
 }
 
 class Cave(alt: Int, h: Hive, tun: Int) {
+  val waterProba = 10 //percentage of flooded tunnels
   val altitude: Int = alt
   val hive: Hive = h
   val numTunnels: Int = tun
   var Tunnels: List[Tunnel] = Nil
   
   val tunnelIcon: ImageIcon = new ImageIcon("img/tunnel.png")
-  val water_icon: ImageIcon = new ImageIcon("img/tunnel_water.png")
+  val waterIcon: ImageIcon = new ImageIcon("img/tunnel_water.png")
   
   
   val width = tunnelIcon.getIconWidth()
@@ -163,7 +164,12 @@ class Cave(alt: Int, h: Hive, tun: Int) {
   var t1 = new Tunnel(new Point(0, alt*height + 300), hive, t0, tunnelIcon)
   Tunnels = t1 :: Tunnels
   for (i <- 2 to tun) {
+    if (AntsBees.state.rng.nextInt(100) > waterProba) {
     Tunnels = new Tunnel(new Point(width * (i - 1), alt*height + 300), Tunnels.head, t0, tunnelIcon) :: Tunnels
+    }
+    else {
+    Tunnels = new Water(new Point(width * (i - 1), alt*height + 300), Tunnels.head, t0, waterIcon) :: Tunnels 
+    }
   }
   for (i <- 1 to (tun - 1)) {
     Tunnels.apply(i).entrance = Tunnels.apply(i - 1)

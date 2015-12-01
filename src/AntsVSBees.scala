@@ -26,11 +26,13 @@ object AntsBees extends SimpleSwingApplication {
   // Part 1: The data describing the state of the game
 
   object state {
+    val rng = scala.util.Random
     var timer = 0 // timer to emulate real time
     var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
     var nextTurn: Boolean = false
-    
+    val numberCaves : Int = 4
+    val numberTunnels : Int = 8
     //Defining Cells :
     val nulpoint = new Point(0, 0)
     
@@ -53,14 +55,13 @@ object AntsBees extends SimpleSwingApplication {
 
     val hive = new Hive(C)
     
-    val cave1 = new Cave(0,hive,8)
-    val cave2 = new Cave(1,hive,8)
+    var Caves : List[Cave] = List(new Cave(0,hive,numberTunnels))
+    for (i <- 1 until numberCaves) {
+      Caves = new Cave(i,hive,numberTunnels) :: Caves
+    }
     
+   
     
-    var Caves :List[Cave] = List(cave1,cave2)
-    
-    val rng = scala.util.Random
-    //var frequency = 1
 
     val purse = new Purse(100)
     
