@@ -20,7 +20,7 @@ class Insect(p: Place, ico: ImageIcon, arm: Int) {
   def onDeath():Unit = {} // Not sure about the name, pretty cool kiskool death effect
 }
 
-class Bee(p: Place) extends Insect(p, new ImageIcon("img/bee.png"), 2) {
+class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
   override val watersafe = true
   
   def move() = {

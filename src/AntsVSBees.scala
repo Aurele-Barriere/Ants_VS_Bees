@@ -149,7 +149,7 @@ object AntsBees extends SimpleSwingApplication {
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       g.setColor(new Color(100, 100, 100))
-      g.drawString(" Press 'n' to add sprites for a newt turn", 10, size.height - 10)
+      g.drawString(" Press 'n' for a new turn", 10, size.height - 10)
       val pos = getPos()
       
       g.drawString("food : " + state.purse.money, size.width - 200, 10)
@@ -160,14 +160,30 @@ object AntsBees extends SimpleSwingApplication {
       for (t <- c.Tunnels) {
         g.drawImage(t.im, t.pos.x, t.pos.y, peer)
       }}
-      for (ins <- state.Insects) {
+      /*for (ins <- state.Insects) {
         ins match {
           case a :Ant => g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
           case b :Bee => b.location match {
             case t:Tunnel => g.drawImage(b.im, t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
             case _ => //nothing
           }
-      }}
+      }}*/
+      for (c <- state.Caves) {
+        for (t <- c.Tunnels) {
+          t.ant match {
+            case Some(a) => g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
+            case None => 
+          }
+          t.bees.length match {
+            case 1 => g.drawImage(new ImageIcon("img/1bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
+            case 2 => g.drawImage(new ImageIcon("img/2bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
+            case 3 => g.drawImage(new ImageIcon("img/3bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
+            case 4 => g.drawImage(new ImageIcon("img/4bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)          
+            case 0 => 
+            case _ => g.drawImage(new ImageIcon("img/5bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
+          }
+        }
+      }
 
       for (c <- state.hive.Cells) {
         c match {
