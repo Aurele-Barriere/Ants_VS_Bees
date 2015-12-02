@@ -83,6 +83,11 @@ object AntsBees extends SimpleSwingApplication {
             }
           case None    =>
         }
+        var newbees :List[Bee] = Nil
+        for (b <- t.bees) {
+          if (b.armor > 0) {newbees = b :: newbees}
+        }
+        t.bees = newbees
       }
       }
       
