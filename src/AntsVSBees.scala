@@ -31,7 +31,7 @@ object AntsBees extends SimpleSwingApplication {
     val framesPerTurn = 50 
     var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
-    var nextTurn: Boolean = false
+    var nextTurn: Boolean = true
     val numberCaves : Int = 4
     val numberTunnels : Int = 8
     //Defining Cells :
@@ -71,14 +71,14 @@ object AntsBees extends SimpleSwingApplication {
     
     def update() = {
       
-      //removing dead insects in the Insects list
-      Insects = for (i <- Insects; if (i.armor > 0)) yield (i) 
+      Insects = for (i <- Insects; if (i.armor > 0)) yield (i)//removing dead insects
       
-      //removing dead insects in the tunnel
+      //removing dead insects in the tunnels
+      
       for (c <- Caves) {
       for (t <- c.Tunnels) {
         t.ant match {
-          case Some(a) => if (a.armor < 1) { 
+          case Some(a) => if (a.armor == 0) { 
             t.ant = None //wiping the board
             a.onDeath() // Death effect
             }
@@ -86,11 +86,12 @@ object AntsBees extends SimpleSwingApplication {
         }
         var newbees :List[Bee] = Nil
         for (b <- t.bees) {
-          if (b.armor > 0) {newbees = b :: newbees}
+          if ((b.armor > 0) || (nextTurn && !b.deathByBullet)) {newbees = b :: newbees}
         }
         t.bees = newbees
       }
       }
+      
       //updating bullets
       var newBullets : List[Bullet] = Nil
       for (b <- Bullets){
@@ -101,6 +102,7 @@ object AntsBees extends SimpleSwingApplication {
       
       //adding random bees in the entrances
       if (nextTurn) {
+        
         for (c <- Caves) {
         
         if (rng.nextInt(100) < c.frequency) { c.entrance.createbees((c.frequency/50)+1) }
@@ -185,6 +187,7 @@ object AntsBees extends SimpleSwingApplication {
       var blocks = true
       for (c <- state.Caves) {
         for (t <- c.Tunnels) {
+          
           blocks = true
           t.ant match {
             case Some(a) => g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
@@ -198,13 +201,15 @@ object AntsBees extends SimpleSwingApplication {
             case 2 => g.drawImage(new ImageIcon("img/2bee.png").getImage(), pos , t.pos.y, peer)
             case 3 => g.drawImage(new ImageIcon("img/3bee.png").getImage(), pos , t.pos.y, peer)
             case 4 => g.drawImage(new ImageIcon("img/4bee.png").getImage(), pos , t.pos.y, peer)          
-            case 0 => 
-            case _ => g.drawImage(new ImageIcon("img/5bee.png").getImage(), pos , t.pos.y, peer)
+            case 0 =>
+            case 5 => g.drawImage(new ImageIcon("img/5bee.png").getImage(), pos , t.pos.y, peer)
+            case _ => g.drawImage(new ImageIcon("img/6bee.png").getImage(), pos , t.pos.y, peer)
           }
         }
       }
+      //drawing bullets
       for (b <- state.Bullets) {
-        g.drawImage((b.icon).getImage(), b.pos.x, b.pos.y, peer)
+    	  g.drawImage(new ImageIcon("img/long_bullet.png").getImage(), b.pos.x, b.pos.y, peer)
       }
 
       for (c <- state.hive.Cells) {

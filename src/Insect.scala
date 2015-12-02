@@ -22,6 +22,7 @@ class Insect(p: Place, ico: ImageIcon, arm: Int) {
 
 class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
   override val watersafe = true
+  var deathByBullet : Boolean = false // if you die by a bullet, you'll be erased after the end of the turn
   
   def move() = {
     location match {
@@ -115,8 +116,8 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
       case t: Tunnel => t.bees match {
         case Nil          =>  this.attacking(t.entrance)
         case l: List[Bee] =>  l.head.armor -= damage
-                              AntsBees.state.Bullets = new Bullet(p.pos, t.exit.pos, new ImageIcon("img/long_bullet.png")) :: AntsBees.state.Bullets
-        
+                              AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/long_bullet.png"), p.icon.getIconWidth()) :: AntsBees.state.Bullets
+                              if (l.head.armor == 0) {l.head.deathByBullet = true}
       }
       case e: Entrance => //empty case so scala doesn't freaks out
     }
