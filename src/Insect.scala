@@ -85,7 +85,7 @@ class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1,
         case Nil       => this.attacking(t)
         case l: List[Bee] => l.head.armor -= damage
       }
-      case e:Entrance =>
+      case _ =>
     }
   }
   override def attack() = { attacking(p) }
@@ -100,6 +100,7 @@ class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrowe
           case Nil         => attacking(t.entrance, n - 1)
           case l: List[Bee] => l.head.armor -= damage
         }
+        case _ =>
       }
     }
   }
@@ -151,6 +152,7 @@ class Scuba(p :Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 1, 5) 
         case Nil          => this.attacking(t)
         case l: List[Bee] => l.head.armor -= damage
       }
+      case _ =>
     }
   }
   override def attack() = { attacking(p) }

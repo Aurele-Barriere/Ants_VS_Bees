@@ -94,7 +94,8 @@ object AntsBees extends SimpleSwingApplication {
       //adding random bees in the entrances
       if (nextTurn) {
         for (c <- Caves) {
-        if (rng.nextInt(100) < c.frequency) { c.entrance.createbees(1) }
+        
+        if (rng.nextInt(100) < c.frequency) { c.entrance.createbees((c.frequency/50)+1) }
         else {c.frequency += 1}
         
       }
@@ -173,19 +174,23 @@ object AntsBees extends SimpleSwingApplication {
             case _ => //nothing
           }
       }}*/
+      var isAnt = true
       for (c <- state.Caves) {
         for (t <- c.Tunnels) {
+          isAnt = true
           t.ant match {
             case Some(a) => g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
-            case None => 
+            case None => isAnt = false
           }
+          var pos = 0
+          if (isAnt) {  pos = t.pos.x} else {pos = t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn)}
           t.bees.length match {
-            case 1 => g.drawImage(new ImageIcon("img/1bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
-            case 2 => g.drawImage(new ImageIcon("img/2bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
-            case 3 => g.drawImage(new ImageIcon("img/3bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
-            case 4 => g.drawImage(new ImageIcon("img/4bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)          
+            case 1 => g.drawImage(new ImageIcon("img/1bee.png").getImage(), pos , t.pos.y, peer)
+            case 2 => g.drawImage(new ImageIcon("img/2bee.png").getImage(), pos , t.pos.y, peer)
+            case 3 => g.drawImage(new ImageIcon("img/3bee.png").getImage(), pos , t.pos.y, peer)
+            case 4 => g.drawImage(new ImageIcon("img/4bee.png").getImage(), pos , t.pos.y, peer)          
             case 0 => 
-            case _ => g.drawImage(new ImageIcon("img/5bee.png").getImage(), t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
+            case _ => g.drawImage(new ImageIcon("img/5bee.png").getImage(), pos , t.pos.y, peer)
           }
         }
       }
