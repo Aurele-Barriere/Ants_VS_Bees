@@ -28,6 +28,7 @@ object AntsBees extends SimpleSwingApplication {
   object state {
     val rng = scala.util.Random
     var timer = 0 // timer to emulate real time
+    val framesPerTurn = 50 
     var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
     var nextTurn: Boolean = false
@@ -101,13 +102,13 @@ object AntsBees extends SimpleSwingApplication {
           case a: Ant => a.attack()
           case b: Bee => b.move() //will attack if there's an ant
         }
-        timer = 50 //one second between each turn 
+        timer = 0 //one second between each turn 
       }
       nextTurn = false
-      if (timer == 0) {
+      if (timer == framesPerTurn) {
         nextTurn = true
       } else {
-        timer -= 1
+        timer += 1
       }
     }
     /* reset(): empties the screen */
@@ -160,8 +161,13 @@ object AntsBees extends SimpleSwingApplication {
         g.drawImage(t.im, t.pos.x, t.pos.y, peer)
       }}
       for (ins <- state.Insects) {
-        g.drawImage(ins.im, ins.location.pos.x, ins.location.pos.y, peer)
-      }
+        ins match {
+          case a :Ant => g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
+          case b :Bee => b.location match {
+            case t:Tunnel => g.drawImage(b.im, t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) , t.pos.y, peer)
+            case _ => //nothing
+          }
+      }}
 
       for (c <- state.hive.Cells) {
         c match {

@@ -175,7 +175,7 @@ class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 1, 4
   def eat(): Unit = {
     if (p.bees != Nil) {
       p.bees.head.armor = 0
-      this digesting = 3
+      this.digesting = 3
     }
   }
   def digest(): Unit = {
