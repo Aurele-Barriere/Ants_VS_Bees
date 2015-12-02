@@ -67,6 +67,7 @@ object AntsBees extends SimpleSwingApplication {
     val purse = new Purse(100)
     
     var Insects : List[Insect] = Nil
+    var Bullets : List[Bullet] = Nil
     
     def update() = {
       
@@ -90,6 +91,13 @@ object AntsBees extends SimpleSwingApplication {
         t.bees = newbees
       }
       }
+      //updating bullets
+      var newBullets : List[Bullet] = Nil
+      for (b <- Bullets){
+        b.update()
+        if (b.isThere) {newBullets = b :: newBullets}
+      }
+      Bullets = newBullets
       
       //adding random bees in the entrances
       if (nextTurn) {
@@ -174,16 +182,17 @@ object AntsBees extends SimpleSwingApplication {
             case _ => //nothing
           }
       }}*/
-      var isAnt = true
+      var blocks = true
       for (c <- state.Caves) {
         for (t <- c.Tunnels) {
-          isAnt = true
+          blocks = true
           t.ant match {
             case Some(a) => g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
-            case None => isAnt = false
+                            if (!a.blocksPath) {blocks = false}
+            case None => blocks = false
           }
           var pos = 0
-          if (isAnt) {  pos = t.pos.x} else {pos = t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn)}
+          if (blocks) {  pos = t.pos.x} else {pos = t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn)}
           t.bees.length match {
             case 1 => g.drawImage(new ImageIcon("img/1bee.png").getImage(), pos , t.pos.y, peer)
             case 2 => g.drawImage(new ImageIcon("img/2bee.png").getImage(), pos , t.pos.y, peer)
@@ -193,6 +202,9 @@ object AntsBees extends SimpleSwingApplication {
             case _ => g.drawImage(new ImageIcon("img/5bee.png").getImage(), pos , t.pos.y, peer)
           }
         }
+      }
+      for (b <- state.Bullets) {
+        g.drawImage((b.icon).getImage(), b.pos.x, b.pos.y, peer)
       }
 
       for (c <- state.hive.Cells) {
