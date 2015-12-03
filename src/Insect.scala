@@ -6,8 +6,8 @@ import javax.swing.ImageIcon
 class Insect(p: Place, ico: ImageIcon, arm: Int) {
   var location: Place = p
   var damage = 1
-  val icon: ImageIcon = ico
-  val im = icon.getImage()
+  var icon: ImageIcon = ico
+  var im = icon.getImage()
   val width: Int = icon.getIconWidth()
   val height: Int = icon.getIconHeight()
   val watersafe = false
@@ -96,7 +96,7 @@ class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1,
 }
 
 class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3) {
-  val range: Int = 2
+  val range: Int = 3
   def attacking(pl: Place, n: Int): Unit = {
     if (n > 0) {
       pl match {
@@ -104,7 +104,8 @@ class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrowe
           case Nil => attacking(t.entrance, n - 1)
           case l: List[Bee] =>
             l.head.armor -= damage
-            AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/short_bullet.png")) :: AntsBees.state.Bullets
+            var pos :Point = if(t.exit.pos.x < this.location.pos.x) {t.pos} else{t.exit.pos}
+            AntsBees.state.Bullets = new Bullet(this.location.pos, pos, new ImageIcon("img/short_bullet.png")) :: AntsBees.state.Bullets
             if (l.head.armor == 0) { l.head.deathByBullet = true }
         }
         case _ =>
@@ -180,7 +181,7 @@ class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) 
   }
 }
 
-class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 1, 4) {
+class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 3, 4) {
   var digesting = 0
   damage = 0
   def eat(): Unit = {
@@ -197,7 +198,13 @@ class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 1, 4
   override def attack(): Unit = {
     if (this.digesting == 0) {
       eat()
+      val ico = new ImageIcon("img/ant_hungry.png")
+      this.icon = ico
+      this.im = ico.getImage()
     } else {
+      val ico = new ImageIcon("img/ant_hungry2.png")
+      this.icon = ico
+      this.im = ico.getImage()
       digest()
     }
   }

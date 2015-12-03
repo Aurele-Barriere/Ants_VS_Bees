@@ -4,9 +4,9 @@ import javax.swing.ImageIcon
 import java.awt.Point
 
 class Bullet(f: Point, t: Point, ico: ImageIcon/*, imm :Int*/) {
-  //val travelled :Int = imm //the distance already traveled by the target
+  
   val from: Point = new Point(f.x, f.y)
-  //val to: Point = new Point(t.x/* - travelled*/, t.y)
+  
   val to : Point = t
   var timer : Int = 0
   val icon: ImageIcon = ico
