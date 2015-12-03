@@ -117,7 +117,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
     }
   }
 }
-class Hive(L: List[Cell]/*, t: Tunnel*/) extends Place(new Point(0, 0)) {
+class Hive(L: List[Cell] /*, t: Tunnel*/ ) extends Place(new Point(0, 0)) {
   //lazy val entrance: Tunnel = t
   lazy val Cells: List[Cell] = L
   def select(c: Cell) {
@@ -150,25 +150,22 @@ class Cave(alt: Int, h: Hive, tun: Int) {
   val hive: Hive = h
   val numTunnels: Int = tun
   var Tunnels: List[Tunnel] = Nil
-  
+
   val tunnelIcon: ImageIcon = new ImageIcon("img/tunnel.png")
   val waterIcon: ImageIcon = new ImageIcon("img/tunnel_water.png")
-  
-  
+
   val width = tunnelIcon.getIconWidth()
   val height = tunnelIcon.getIconHeight()
   var frequency = 1
-  
-  
+
   val t0 = new Tunnel(new Point(0, 0), null, null, tunnelIcon)
-  var t1 = new Tunnel(new Point(0, alt*height + 300), hive, t0, tunnelIcon)
+  var t1 = new Tunnel(new Point(0, alt * height + 300), hive, t0, tunnelIcon)
   Tunnels = t1 :: Tunnels
   for (i <- 2 to tun) {
     if (AntsBees.state.rng.nextInt(100) > waterProba) {
-    Tunnels = new Tunnel(new Point(width * (i - 1), alt*height + 300), Tunnels.head, t0, tunnelIcon) :: Tunnels
-    }
-    else {
-    Tunnels = new Water(new Point(width * (i - 1), alt*height + 300), Tunnels.head, t0, waterIcon) :: Tunnels 
+      Tunnels = new Tunnel(new Point(width * (i - 1), alt * height + 300), Tunnels.head, t0, tunnelIcon) :: Tunnels
+    } else {
+      Tunnels = new Water(new Point(width * (i - 1), alt * height + 300), Tunnels.head, t0, waterIcon) :: Tunnels
     }
   }
   for (i <- 1 to (tun - 1)) {

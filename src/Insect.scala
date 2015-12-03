@@ -104,7 +104,7 @@ class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrowe
           case Nil => attacking(t.entrance, n - 1)
           case l: List[Bee] =>
             l.head.armor -= damage
-            var pos :Point = if(t.exit.pos.x < this.location.pos.x) {t.pos} else{t.exit.pos}
+            var pos: Point = if (t.exit.pos.x < this.location.pos.x) { t.pos } else { t.exit.pos }
             AntsBees.state.Bullets = new Bullet(this.location.pos, pos, new ImageIcon("img/short_bullet.png")) :: AntsBees.state.Bullets
             if (l.head.armor == 0) { l.head.deathByBullet = true }
         }

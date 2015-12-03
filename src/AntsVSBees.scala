@@ -28,17 +28,17 @@ object AntsBees extends SimpleSwingApplication {
   object state {
     val rng = scala.util.Random
     var timer = 0 // timer to emulate real time
-    val framesPerTurn = 50 
+    val framesPerTurn = 50
     var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
     var nextTurn: Boolean = true
-    val numberCaves : Int = 4
-    val numberTunnels : Int = 8
+    val numberCaves: Int = 4
+    val numberTunnels: Int = 8
     //Defining Cells :
     val nulpoint = new Point(0, 0)
-    
+
     val t0: Tunnel = new Tunnel(nulpoint, t0, t0, new ImageIcon("img/tunnel.png")) //just a place to put the insects in the hive
-    
+
     // Units selecting cells are at y=50, with a distance of 100 x between each icon
     val harvester = new CellAnt(new Point(50, 50), new Harvester(t0))
     val thrower = new CellAnt(new Point(150, 50), new Thrower(t0))
@@ -55,79 +55,91 @@ object AntsBees extends SimpleSwingApplication {
     val C: List[Cell] = List(harvester, thrower, short, long, fire, scuba, wall, ninja, hungry, bodyguard, queen, bye)
 
     val hive = new Hive(C)
-    
-    var Caves : List[Cave] = List(new Cave(0,hive,numberTunnels))
+
+    var Caves: List[Cave] = List(new Cave(0, hive, numberTunnels))
     for (i <- 1 until numberCaves) {
-      Caves = new Cave(i,hive,numberTunnels) :: Caves
+      Caves = new Cave(i, hive, numberTunnels) :: Caves
     }
-    
-   
-    
 
     val purse = new Purse(100)
-    
-    var Insects : List[Insect] = Nil
-    var Bullets : List[Bullet] = Nil
-    
+
+    var Insects: List[Insect] = Nil
+    var Bullets: List[Bullet] = Nil
+
     def update() = {
-      
-      Insects = for (i <- Insects; if (i.armor > 0)) yield (i)//removing dead insects
-      
+
+      Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
+
       //removing dead insects in the tunnels
-      
+
       for (c <- Caves) {
-      for (t <- c.Tunnels) {
-        t.ant match {
-          case Some(a) => if (a.armor < 1) { 
-            t.ant = None //wiping the board
-            a.onDeath() // Death effect
+        for (t <- c.Tunnels) {
+          t.ant match {
+            case Some(a) => if (a.armor < 1) {
+              t.ant = None //wiping the board
+              a.onDeath() // Death effect
             }
-          case None    =>
+            case None =>
+          }
+          var newbees: List[Bee] = Nil
+          for (b <- t.bees) {
+            if ((b.armor > 0) || (!nextTurn && b.deathByBullet)) { newbees = b :: newbees }
+          }
+          t.bees = newbees
         }
-        var newbees :List[Bee] = Nil
-        for (b <- t.bees) {
-          if ((b.armor > 0) || (!nextTurn && b.deathByBullet)) {newbees = b :: newbees}
-        }
-        t.bees = newbees
       }
-      }
-      
+
       //updating bullets
-      var newBullets : List[Bullet] = Nil
-      for (b <- Bullets){
+      var newBullets: List[Bullet] = Nil
+      for (b <- Bullets) {
         b.update()
-        if (b.isThere) {newBullets = b :: newBullets}
+        if (b.isThere) { newBullets = b :: newBullets }
       }
       Bullets = newBullets
-      
+
       //adding random bees in the entrances
       if (nextTurn) {
-        
+
         for (c <- Caves) {
-        
-        if (rng.nextInt(100) < c.frequency) { c.entrance.createbees((c.frequency/50)+1) }
-        else {c.frequency += 1}
-        
+
+          if (rng.nextInt(100) < c.frequency) { c.entrance.createbees((c.frequency / 50) + 1) }
+          else { c.frequency += 1 }
+
+        }
       }
-      }
-      
+
       //Insects can now perform actions
       if (nextTurn) for (i <- Insects) {
 
         i match {
           case a: Ant => a.attack()
-          case b: Bee  => b.move() 
-          
+          case b: Bee => b.move()
+
         }
         timer = 0 //one second between each turn 
       }
-    
+
       nextTurn = false
       if (timer == framesPerTurn) {
         nextTurn = true
       } else {
         timer += 1
       }
+
+      //when we loose the game
+      if (lost) {
+        for (c <- Caves) {
+          c.frequency = 301
+          for (t <- c.Tunnels) {
+
+            t.ant match {
+              case Some(a) => a.armor = 0
+              case None    =>
+            }
+          }
+        }
+      }
+
     }
     /* reset(): empties the screen */
     def reset() = {
@@ -148,7 +160,7 @@ object AntsBees extends SimpleSwingApplication {
     def on_click() = {
       for (c <- state.hive.Cells) if (c.is_clicked(getPos())) (state.hive.select(c))
       for (cave <- state.Caves) {
-      for (t <- cave.Tunnels) if (t.is_clicked(getPos())) { for (c <- state.hive.Cells) if (c.is_selected) { c.buy_ant(state.purse, t) } }
+        for (t <- cave.Tunnels) if (t.is_clicked(getPos())) { for (c <- state.hive.Cells) if (c.is_selected) { c.buy_ant(state.purse, t) } }
       }
     }
     reactions += {
@@ -169,42 +181,44 @@ object AntsBees extends SimpleSwingApplication {
       g.setColor(new Color(100, 100, 100))
       g.drawString(" Press 'n' for a new turn", 10, size.height - 10)
       val pos = getPos()
-      
+
       g.drawString("food : " + state.purse.money, size.width - 200, 10)
       if (state.lost) { g.drawString("lost", 0, 0) }
       g.setColor(Color.black)
-      
+
       for (c <- state.Caves) {
-      for (t <- c.Tunnels) {
-        g.drawImage(t.im, t.pos.x, t.pos.y, peer)
-      }}
-      
+        for (t <- c.Tunnels) {
+          g.drawImage(t.im, t.pos.x, t.pos.y, peer)
+        }
+      }
+
       var blocks = true
       for (c <- state.Caves) {
         for (t <- c.Tunnels) {
-          
+
           blocks = true
           t.ant match {
-            case Some(a) => g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
-                            if (!a.blocksPath) {blocks = false}
+            case Some(a) =>
+              g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
+              if (!a.blocksPath) { blocks = false }
             case None => blocks = false
           }
           var pos = 0
-          if (blocks) {  pos = t.pos.x} else {pos = t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn)}
+          if (blocks) { pos = t.pos.x } else { pos = t.pos.x - ((state.timer * t.icon.getIconWidth()) / state.framesPerTurn) }
           t.bees.length match {
-            case 1 => g.drawImage(new ImageIcon("img/1bee.png").getImage(), pos , t.pos.y, peer)
-            case 2 => g.drawImage(new ImageIcon("img/2bee.png").getImage(), pos , t.pos.y, peer)
-            case 3 => g.drawImage(new ImageIcon("img/3bee.png").getImage(), pos , t.pos.y, peer)
-            case 4 => g.drawImage(new ImageIcon("img/4bee.png").getImage(), pos , t.pos.y, peer)          
-            case 5 => g.drawImage(new ImageIcon("img/5bee.png").getImage(), pos , t.pos.y, peer)
+            case 1 => g.drawImage(new ImageIcon("img/1bee.png").getImage(), pos, t.pos.y, peer)
+            case 2 => g.drawImage(new ImageIcon("img/2bee.png").getImage(), pos, t.pos.y, peer)
+            case 3 => g.drawImage(new ImageIcon("img/3bee.png").getImage(), pos, t.pos.y, peer)
+            case 4 => g.drawImage(new ImageIcon("img/4bee.png").getImage(), pos, t.pos.y, peer)
+            case 5 => g.drawImage(new ImageIcon("img/5bee.png").getImage(), pos, t.pos.y, peer)
             case 0 =>
-            case _ => g.drawImage(new ImageIcon("img/6bee.png").getImage(), pos , t.pos.y, peer)
+            case _ => g.drawImage(new ImageIcon("img/6bee.png").getImage(), pos, t.pos.y, peer)
           }
         }
       }
       //drawing bullets
       for (b <- state.Bullets) {
-    	  g.drawImage((b.icon).getImage(), b.pos.x, b.pos.y, peer)
+        g.drawImage((b.icon).getImage(), b.pos.x, b.pos.y, peer)
       }
 
       for (c <- state.hive.Cells) {
