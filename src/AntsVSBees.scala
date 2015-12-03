@@ -116,10 +116,12 @@ object AntsBees extends SimpleSwingApplication {
 
         i match {
           case a: Ant => a.attack()
-          case b: Bee => b.move() //will attack if there's an ant
+          case b: Bee  => b.move() 
+          
         }
         timer = 0 //one second between each turn 
       }
+    
       nextTurn = false
       if (timer == framesPerTurn) {
         nextTurn = true
