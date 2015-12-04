@@ -63,12 +63,12 @@ object AntsBees extends SimpleSwingApplication {
 
     val purse = new Purse(100)
 
-    var Insects: List[Insect] = Nil
+    
     var Bullets: List[Bullet] = Nil
 
     def update() = {
 
-      Insects = for (i <- Insects; if (i.armor > 0)) yield (i) //removing dead insects
+      
 
       //removing dead insects in the tunnels
 
@@ -109,15 +109,7 @@ object AntsBees extends SimpleSwingApplication {
       }
 
       //Insects can now perform actions
-      /*if (nextTurn) for (i <- Insects) {
 
-        i match {
-          case a: Ant => a.attack()
-          case b: Bee => b.move()
-
-        }
-        timer = 0 //one second between each turn 
-      }*/
       for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) {b.hasMoved = false}
       
       if (nextTurn) for (c <- Caves) {
@@ -154,7 +146,7 @@ object AntsBees extends SimpleSwingApplication {
     }
     /* reset(): empties the screen */
     def reset() = {
-      Insects = Nil
+      
     }
   }
 

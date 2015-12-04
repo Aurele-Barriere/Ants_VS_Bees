@@ -49,27 +49,9 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
    }
       }
     }
-    AntsBees.state.Insects = t :: AntsBees.state.Insects
+    
   }
-  // deprecated neighbour code? You might want to check on this. Yes I don't think we will use it. 
-  def left_neighbour(n: Int): Place = {
-    n match {
-      case 0 => return this
-      case m: Int => this.exit match {
-        case h: Hive   => return h
-        case t: Tunnel => return t.left_neighbour(m - 1)
-      }
-    }
-  }
-  def right_neighbour(n: Int): Place = {
-    n match {
-      case 0 => return this
-      case m: Int => this.entrance match {
-        case e: Entrance => return e
-        case t: Tunnel   => return t.right_neighbour(m - 1)
-      }
-    }
-  }
+  
 }
 
 class Cell(p: Point) extends Place(p) {
@@ -138,7 +120,6 @@ class Entrance(p: Point, t: Tunnel) extends Place(p) {
     if (n > 0) {
       val b = new Bee(this)
       this.bees = b :: this.bees
-      AntsBees.state.Insects = b :: AntsBees.state.Insects
       createbees(n - 1)
     }
   }
