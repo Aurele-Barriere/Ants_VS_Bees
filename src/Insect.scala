@@ -177,8 +177,9 @@ class Wall(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4) {
 class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) {
   override val blocksPath = false
   override def attack(): Unit = {
-    for (b <- p.bees) {
-      b.armor -= damage
+    p.bees match {
+      case Nil =>
+      case _ => p.bees.head.armor = p.bees.head.armor - 1
     }
   }
 }

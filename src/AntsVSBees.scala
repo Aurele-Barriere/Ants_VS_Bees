@@ -62,6 +62,7 @@ object AntsBees extends SimpleSwingApplication {
     }
 
     val purse = new Purse(100)
+    var score :Int = 0
 
     
     var Bullets: List[Bullet] = Nil
@@ -83,7 +84,7 @@ object AntsBees extends SimpleSwingApplication {
           }
           var newbees: List[Bee] = Nil
           for (b <- t.bees) {
-            if ((b.armor > 0) || (!nextTurn && b.deathByBullet)) { newbees = b :: newbees }
+            if ((b.armor > 0) || (!nextTurn && b.deathByBullet)) { newbees = b :: newbees } else {score = score +1}
           }
           t.bees = newbees
         }
@@ -136,15 +137,15 @@ object AntsBees extends SimpleSwingApplication {
           for (t <- c.Tunnels) {
 
             t.ant match {
-              case Some(a) => a.armor = 0
-              case None    =>
+              case Some(a :Ninja) => a.armor = 0
+              case _    =>
             }
           }
         }
       }
 
     }
-    /* reset(): empties the screen */
+    /* reset(): to do*/
     def reset() = {
       
     }
@@ -182,10 +183,11 @@ object AntsBees extends SimpleSwingApplication {
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       g.setColor(new Color(100, 100, 100))
-      g.drawString(" Press 'n' for a new turn", 10, size.height - 10)
+      
       val pos = getPos()
 
       g.drawString("food : " + state.purse.money, size.width - 200, 10)
+      g.drawString("score : " + state.score, size.width -200, 30)
       if (state.lost) { g.drawString("lost", 0, 0) }
       g.setColor(Color.black)
 
