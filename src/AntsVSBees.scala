@@ -109,7 +109,7 @@ object AntsBees extends SimpleSwingApplication {
       }
 
       //Insects can now perform actions
-      if (nextTurn) for (i <- Insects) {
+      /*if (nextTurn) for (i <- Insects) {
 
         i match {
           case a: Ant => a.attack()
@@ -117,7 +117,18 @@ object AntsBees extends SimpleSwingApplication {
 
         }
         timer = 0 //one second between each turn 
+      }*/
+      for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) {b.hasMoved = false}
+      
+      if (nextTurn) for (c <- Caves) {
+        for (t <- c.Tunnels) {
+          t.ant match {case Some(a) => a.attack() case None => }
+          for (b <- t.bees) {if (!b.hasMoved) {b.move()}}
+        }
+        for (b <- c.entrance.bees) {if (!b.hasMoved) {b.move()}}
+        timer = 0
       }
+      
 
       nextTurn = false
       if (timer == framesPerTurn) {

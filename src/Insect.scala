@@ -23,7 +23,8 @@ class Insect(p: Place, ico: ImageIcon, arm: Int) {
 class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
   override val watersafe = true
   var deathByBullet: Boolean = false // if you die by a bullet, you'll be erased after the end of the turn
-
+  var hasMoved :Boolean = false
+  
   def move() = {
     location match {
       case t: Tunnel => {
@@ -32,7 +33,7 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
             t.removebee(this)
             this.location = t.exit
             t.exit match {
-              case s: Tunnel => s.addbee(this)
+              case s: Tunnel => s.bees = this :: s.bees
               case h: Hive   => AntsBees.state.lost = true
             }
           }
@@ -40,7 +41,7 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
             t.removebee(this)
             this.location = t.exit
             t.exit match {
-              case s: Tunnel => s.addbee(this)
+              case s: Tunnel => s.bees = this :: s.bees
               case h: Hive   => AntsBees.state.lost = true
             }
           }
@@ -49,10 +50,11 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
       }
       case e: Entrance =>
         e.removebee(this)
-        e.exit.addbee(this)
+        e.exit.bees = this :: e.exit.bees
         this.location = e.exit
       case h: Hive =>
     }
+    hasMoved = true
   }
 }
 

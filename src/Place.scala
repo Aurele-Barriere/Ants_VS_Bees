@@ -46,7 +46,7 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         if (a.canContain(t)) {
           a.ant = Some(t)
           ant = Some(a)
-        }
+   }
       }
     }
     AntsBees.state.Insects = t :: AntsBees.state.Insects
