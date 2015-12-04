@@ -63,12 +63,12 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
 
 abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(p, ico, arm) {
   val container = false
-  var ant: Option[Ant] = None // For containers
+  var ant: Option[Ant] = None //For containers
   val cost: Int = co
   val blocksPath = true
   val unique = false
   var buffed = false
-  def attack() = {}
+  def attack() = {} //will be overrided for most ants
   var damage = 1
   if (AntsBees.state.isQueen) {damage *= 2}
   def canContain(t: Ant): Boolean = {
@@ -234,7 +234,6 @@ class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) 
   override val unique = true
   override val watersafe = true
   var isImpostor :Boolean = false // is this an impostor queen ?
-  buffed = true
   
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {

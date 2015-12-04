@@ -206,6 +206,7 @@ object AntsBees extends SimpleSwingApplication {
           t.ant match {
             case Some(a) =>
               g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
+              a.ant match {case Some(ant) => g.drawImage(ant.im, ant.location.pos.x, ant.location.pos.y, peer) case None => }
               if (!a.blocksPath) { blocks = false }
             case None => blocks = false
           }
