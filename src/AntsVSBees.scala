@@ -31,6 +31,7 @@ object AntsBees extends SimpleSwingApplication {
     val framesPerTurn = 50
     var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
+    var isQueen : Boolean = false //is there a queen?
     var nextTurn: Boolean = true
     val numberCaves: Int = 4
     val numberTunnels: Int = 8

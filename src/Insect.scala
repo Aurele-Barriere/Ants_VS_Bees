@@ -5,15 +5,15 @@ import javax.swing.ImageIcon
 
 class Insect(p: Place, ico: ImageIcon, arm: Int) {
   var location: Place = p
-  var damage = 1
+  
   var icon: ImageIcon = ico
   var im = icon.getImage()
   val width: Int = icon.getIconWidth()
   val height: Int = icon.getIconHeight()
   val watersafe = false
-  var armor: Int = arm //when goes down to 0, the insect dies :'(
+  var armor: Int = arm //when goes down to 0, the insect dies 
 
-  def inSprite(p: Point) = { //returns true if a given point is in the sprite
+  def inSprite(p: Point) = { //returns true if a given point is in the sprite. is this used?
     (location.pos.x < p.x && p.x < location.pos.x + width &&
       location.pos.y < p.y && p.y < location.pos.y + height)
   }
@@ -24,6 +24,7 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
   override val watersafe = true
   var deathByBullet: Boolean = false // if you die by a bullet, you'll be erased after the end of the turn
   var hasMoved :Boolean = false
+  var damage = 1
   
   def move() = {
     location match {
@@ -37,7 +38,7 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
               case h: Hive   => AntsBees.state.lost = true
             }
           }
-          case Some(a) if !a.blocksPath => { // ugly af I know, but pattern matching is a b****
+          case Some(a) if !a.blocksPath => { 
             t.removebee(this)
             this.location = t.exit
             t.exit match {
@@ -61,7 +62,6 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
 // Ants
 
 abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(p, ico, arm) {
-  //val location: Tunnel = lo
   val container = false
   var ant: Option[Ant] = None // For containers
   val cost: Int = co
@@ -69,6 +69,8 @@ abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(
   val unique = false
   var buffed = false
   def attack() = {}
+  var damage = 1
+  if (AntsBees.state.isQueen) {damage *= 2}
   def canContain(t: Ant): Boolean = {
     this.container && !t.container && this.ant == None
   }
@@ -161,8 +163,11 @@ class Scuba(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 1, 5) 
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
       case t: Tunnel => t.bees match {
-        case Nil          => this.attacking(t)
-        case l: List[Bee] => l.head.armor -= damage
+        case Nil => this.attacking(t)
+        case l: List[Bee] =>
+          l.head.armor -= damage
+          AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/bullet.png")) :: AntsBees.state.Bullets
+          if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
       case _ =>
     }
@@ -179,7 +184,7 @@ class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) 
   override def attack(): Unit = {
     p.bees match {
       case Nil =>
-      case _ => p.bees.head.armor = p.bees.head.armor - 1
+      case _ => p.bees.head.armor = p.bees.head.armor - damage
     }
   }
 }
@@ -228,43 +233,38 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) {
   override val unique = true
   override val watersafe = true
+  var isImpostor :Boolean = false // is this an impostor queen ?
   buffed = true
+  
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
-      case t: Tunnel => {
-        t.bees match {
-          case Nil          => this.attacking(t)
-          case l: List[Bee] => l.head.armor -= damage
-        }
+      case t: Tunnel => t.bees match {
+        case Nil => this.attacking(t)
+        case l: List[Bee] =>
+          l.head.armor -= damage
+          AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/bullet.png")) :: AntsBees.state.Bullets
+          if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
+      case _ =>
     }
   }
   override def onDeath() = {
-    AntsBees.state.lost = true
+    if (!isImpostor) AntsBees.state.lost = true //if the real queen died
   }
-  def inspire(pl: Tunnel): Unit = {
-    pl.entrance match {
-      case t: Tunnel => {
-        t.ant match {
-          case Some(a) if !a.buffed => {
-            a.buffed = true
-            a.damage += 2
-          }
-        }
-        inspire(t)
-      }
-      case e: Entrance =>
-    }
+  
+  def inspire() = {
+    AntsBees.state.isQueen = true //all ants put after the queen will have double damage
   }
   def impostor(): Unit = {
     if (AntsBees.state.uniqueUnits > 1) {
       this.armor = 0
+      isImpostor = true
       AntsBees.state.uniqueUnits -= 1
     }
   }
   override def attack() = {
-    //attacking(p)
-    //inspire(p)
+    attacking(p)
+    inspire()
     impostor()
   }
 }

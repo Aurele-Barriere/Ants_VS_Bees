@@ -67,7 +67,7 @@ class Cell(p: Point) extends Place(p) {
 
 class Bye(p: Point) extends Cell(p) {
   override def buy_ant(p: Purse, tun: Tunnel) = {
-    tun.removeant()
+    tun.ant match {case Some (a : Queen) => case _ => tun.removeant()}
   }
 }
 
@@ -100,7 +100,6 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   }
 }
 class Hive(L: List[Cell] /*, t: Tunnel*/ ) extends Place(new Point(0, 0)) {
-  //lazy val entrance: Tunnel = t
   lazy val Cells: List[Cell] = L
   def select(c: Cell) {
     for (cell <- this.Cells) {
