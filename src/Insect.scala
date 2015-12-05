@@ -222,7 +222,7 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 
 // Here comes the queen
 
-class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 450) {
+class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 300) {
   override val unique = true
   override val watersafe = true
   var isImpostor: Boolean = false // is this an impostor queen ?
