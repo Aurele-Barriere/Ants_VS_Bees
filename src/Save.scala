@@ -54,22 +54,26 @@ object savestate {
     AntsBees.state.uniqueUnits = lines(1).toInt
     AntsBees.state.lost = lines(2).toBoolean
     AntsBees.state.timer = lines(3).toInt
+    // Creating 4 caves
     var caves: List[Cave] = Nil
     for (i <- 0 until AntsBees.state.numberCaves) {
       var cave = new Cave(i, AntsBees.state.hive, AntsBees.state.numberTunnels)
       var tunnels: List[Tunnel] = Nil
       val t0 = new Tunnel(new Point(0, 0), null, null, cave.tunnelIcon)
       tunnels = t0 :: tunnels
+      // Creating 8 tunnels for the cave
       for (j <- 0 until AntsBees.state.numberTunnels) {
         var occupied = true
         var ant: Ant = new Harvester(tunnels.head)
+        var tunnel = new Tunnel(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.tunnelIcon)
         val tunnelLine = 4 + (3 - i) * 48 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
         lines(tunnelLine).toInt match {
-          case 0 => tunnels = new Tunnel(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.tunnelIcon) :: tunnels
-          case 1 => tunnels = new Water(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.waterIcon) :: tunnels
+          case 0 =>
+          case 1 => tunnel = new Water(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.waterIcon)
         }
-        if (tunnels.length == 2) { // initialization of t1
-          tunnels.head.exit = cave.hive
+        
+        if (j == 0) { // initialization of t1
+          tunnel.exit = cave.hive
         }
         lines(tunnelLine + 1).toInt match {
           case 0  => occupied = false
@@ -92,17 +96,20 @@ object savestate {
           tunnels.head.ant = Some(ant)
         }
         for (k <- 0 until lines(tunnelLine + 5).toInt) {
-          val b = new Bee(tunnels.head)
-          tunnels.head.bees = b :: tunnels.head.bees
+          val b = new Bee(tunnel)
+          tunnel.bees = b :: tunnel.bees
         }
+        if (j == 7) {
+          cave.entrance = new Entrance(new Point(AntsBees.state.numberTunnels * cave.width, cave.altitude), tunnels.head)
+          tunnel.entrance = cave.entrance
+        }
+        tunnels = tunnel :: tunnels
       }
       tunnels = tunnels diff List(t0)
       for (i <- 1 until AntsBees.state.numberTunnels) {
         tunnels.apply(i).entrance = tunnels.apply(i - 1)
       }
       cave.Tunnels = tunnels
-      val entrance = new Entrance(new Point(AntsBees.state.numberTunnels * cave.width, cave.altitude), cave.Tunnels.head)
-      cave.Tunnels.head.entrance = entrance
       caves = cave :: caves
     }
     AntsBees.state.Caves = caves
