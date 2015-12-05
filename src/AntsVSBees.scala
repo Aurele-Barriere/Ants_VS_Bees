@@ -121,6 +121,8 @@ object AntsBees extends SimpleSwingApplication {
         timer = 0
       }
 
+      // Time is ticking
+      
       nextTurn = false
       if (timer == framesPerTurn) {
         nextTurn = true

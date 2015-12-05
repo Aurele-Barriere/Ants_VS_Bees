@@ -143,7 +143,6 @@ class Cave(alt: Int, h: Hive, tun: Int) {
   for (i <- 1 to (tun - 1)) {
     Tunnels.apply(i).entrance = Tunnels.apply(i - 1)
   }
-  val entrance = new Entrance(new Point(tun * width, alt), Tunnels.head)
+  var entrance = new Entrance(new Point(tun * width, alt), Tunnels.head)
   Tunnels.head.entrance = entrance
-
 }
