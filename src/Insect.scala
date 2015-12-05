@@ -122,7 +122,7 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
           AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/long_bullet.png")) :: AntsBees.state.Bullets
           if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
-      case _: Entrance => 
+      case _: Entrance =>
     }
   }
   //We first need to jump over the dead space
@@ -222,7 +222,7 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 
 // Here comes the queen
 
-class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 500) {
+class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 450) {
   override val unique = true
   override val watersafe = true
   var isImpostor: Boolean = false // is this an impostor queen ?

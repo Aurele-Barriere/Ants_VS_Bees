@@ -1,8 +1,5 @@
 /* This project is proudly presented to you by Aurèle Barrière and Rémy Sun for PROG1 */
 
-// Compile with: scalac -cp scala-swing.jar
-
-
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.Point
