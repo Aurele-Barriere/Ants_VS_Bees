@@ -59,7 +59,7 @@ object AntsBees extends SimpleSwingApplication {
       Caves = new Cave(i, hive, numberTunnels) :: Caves
     }
 
-    val purse = new Purse(10)
+    val purse = new Purse(1000)
     var score: Int = 0
 
     var Bullets: List[Bullet] = Nil

@@ -35,6 +35,9 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
           AntsBees.state.purse.money -= t.cost
         }
         if (t.unique) {
+          if (AntsBees.state.uniqueUnits != 0) {
+            t.isImpostor = true
+          }
           AntsBees.state.uniqueUnits += 1
         }
       case Some(a) => {

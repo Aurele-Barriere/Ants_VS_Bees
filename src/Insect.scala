@@ -16,27 +16,23 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
   var deathByBullet: Boolean = false // if you die by a bullet, you'll be erased after the end of the turn
   var hasMoved: Boolean = false
   var damage = 1
+  
+  def pass(t:Tunnel):Unit = { // pass through from 1 tunnel from the other
+    t.removebee(this)
+    this.location = t.exit
+    t.exit match {
+      case s: Tunnel => s.bees = this :: s.bees
+      case h: Hive   => AntsBees.state.lost = true
+    }
+  }
 
   def move() = {
     location match {
       case t: Tunnel => {
         t.ant match {
-          case None => {
-            t.removebee(this)
-            this.location = t.exit
-            t.exit match {
-              case s: Tunnel => s.bees = this :: s.bees
-              case h: Hive   => AntsBees.state.lost = true
-            }
-          }
-          case Some(a) if !a.blocksPath => {
-            t.removebee(this)
-            this.location = t.exit
-            t.exit match {
-              case s: Tunnel => s.bees = this :: s.bees
-              case h: Hive   => AntsBees.state.lost = true
-            }
-          }
+          //pass as long as there is no one, attack otherwise
+          case None => pass(t) 
+          case Some(a) if !a.blocksPath => pass(t)
           case Some(a) => (a.armor -= damage)
         }
       }
@@ -53,13 +49,14 @@ class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
 // Ants
 
 abstract class Ant(p: Tunnel, ico: ImageIcon, arm: Int, co: Int) extends Insect(p, ico, arm) {
-  val container = false
-  var ant: Option[Ant] = None //For containers
-  val cost: Int = co
-  val blocksPath = true
-  val unique = false
-  var buffed = false
-  def attack() = {} //will be overrided for most ants
+  val container = false // Is this unit a container ?
+  var ant: Option[Ant] = None // What does it contain ?
+  var isImpostor: Boolean = false // is this an impostor queen ?
+  val cost: Int = co 
+  val blocksPath = true 
+  val unique = false 
+  var buffed = false  
+  def attack() = {}
   var damage = 1
   if (AntsBees.state.isQueen) { damage *= 2 }
   def canContain(t: Ant): Boolean = {
@@ -80,7 +77,9 @@ class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1,
       case t: Tunnel => t.bees match {
         case Nil => this.attacking(t)
         case l: List[Bee] =>
+          // Inflicting damage
           l.head.armor -= damage
+          // Animating bullets
           AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/bullet.png")) :: AntsBees.state.Bullets
           if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
@@ -93,12 +92,14 @@ class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1,
 class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrower.png"), 1, 3) {
   val range: Int = 3
   def attacking(pl: Place, n: Int): Unit = {
-    if (n > 0) {
+    if (n > 0) { // check if range has been exceeded
       pl match {
         case t: Tunnel => t.bees match {
           case Nil => attacking(t.entrance, n - 1)
           case l: List[Bee] =>
+            // Inflicting damage
             l.head.armor -= damage
+            // Animating bullets
             var pos: Point = if (t.exit.pos.x < this.location.pos.x) { t.pos } else { t.exit.pos }
             AntsBees.state.Bullets = new Bullet(this.location.pos, pos, new ImageIcon("img/short_bullet.png")) :: AntsBees.state.Bullets
             if (l.head.armor == 0) { l.head.deathByBullet = true }
@@ -113,12 +114,13 @@ class Short_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_shortthrowe
 class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.png"), 1, 3) {
   val deadrange: Int = 3
   def attacking(pl: Place): Unit = {
-
     pl match {
       case t: Tunnel => t.bees match {
         case Nil => this.attacking(t.entrance)
         case l: List[Bee] =>
+          // Inflicting damage
           l.head.armor -= damage
+          // Animating bullets
           AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/long_bullet.png")) :: AntsBees.state.Bullets
           if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
@@ -127,7 +129,6 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
   }
   //We first need to jump over the dead space
   def charging(pl: Place, n: Int): Unit = {
-
     if (n > 0) {
       pl match { case t: Tunnel => charging(t.entrance, n - 1) case _: Entrance => }
 
@@ -156,7 +157,9 @@ class Scuba(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 1, 8) 
       case t: Tunnel => t.bees match {
         case Nil => this.attacking(t)
         case l: List[Bee] =>
+          // Inflicting damage
           l.head.armor -= damage
+          // Animating bullets
           AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/bullet.png")) :: AntsBees.state.Bullets
           if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
@@ -181,8 +184,9 @@ class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 10)
 }
 
 class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 3, 5) {
-  var digesting = 0
+  var digesting = 0 // Turns left to spend digesting
   damage = 0
+  // instant kill bee end go into digestion for 3 turns
   def eat(): Unit = {
     if (p.bees != Nil) {
       p.bees.head.armor = 0
@@ -190,6 +194,7 @@ class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 3, 5
       if (this.armor < 3) { this.armor += AntsBees.state.rng.nextInt(1) }
     }
   }
+  // Digest for a turn
   def digest(): Unit = {
     if (this.digesting > 0) {
       this.digesting -= 1
@@ -212,6 +217,7 @@ class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 3, 5
 
 class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2, 3) {
   override val container = true
+  // This unit spawns its content back on the field on death
   override def onDeath() = {
     this.ant match {
       case Some(a) => p.ant = Some(a)
@@ -225,31 +231,33 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 300) {
   override val unique = true
   override val watersafe = true
-  var isImpostor: Boolean = false // is this an impostor queen ?
 
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
       case t: Tunnel => t.bees match {
         case Nil => this.attacking(t)
         case l: List[Bee] =>
+          // Inflicting damage
           l.head.armor -= damage
+          // Animating bullets
           AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/bullet.png")) :: AntsBees.state.Bullets
           if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
       case _ =>
     }
   }
+  // That is unfortunate...
   override def onDeath() = {
     if (!isImpostor) AntsBees.state.lost = true //if the real queen died
   }
-
+  // Take heart, for the queen walks among us!
   def inspire() = {
     AntsBees.state.isQueen = true //all ants put after the queen will have double damage
   }
+  // Impostors should just kill themselves
   def impostor(): Unit = {
-    if (AntsBees.state.uniqueUnits > 1) {
+    if (isImpostor) {
       this.armor = 0
-      isImpostor = true
       AntsBees.state.uniqueUnits -= 1
     }
   }
