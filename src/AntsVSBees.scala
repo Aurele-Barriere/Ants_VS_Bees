@@ -147,6 +147,8 @@ object AntsBees extends SimpleSwingApplication {
 
       case KeyTyped(_, 'c', _, _) => state.reset()
       case KeyTyped(_, 'n', _, _) => state.nextTurn = true
+      case KeyTyped(_, 'a', _, _) => savestate.save()
+      case KeyTyped(_, 'z', _, _) => savestate.load()
 
       case _: FocusLost           => repaint()
     }
