@@ -109,6 +109,6 @@ object savestate {
       caves = cave:: caves
     }
     AntsBees.state.Caves = caves
-    AntsBees.state.Insects = insects  
+    //AntsBees.state.Insects = insects  
   }
 }
