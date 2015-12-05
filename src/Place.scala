@@ -9,8 +9,8 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   var exit: Place = ex // Place "to the left"
   var entrance: Place = en // Place "to the right"
   val ground = true
-  var ant: Option[Ant] = None // What ant is there in this tunnel ?
-  var bees: List[Bee] = Nil // What are the bees here ?
+  var ant: Option[Ant] = None 
+  var bees: List[Bee] = Nil 
   val icon: ImageIcon = ico
   val im = icon.getImage()
 
@@ -56,13 +56,11 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         }
       }
     }
-
   }
-
 }
 
 class Water(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Tunnel(p, ex, en, ico) {
-  override val ground = false // Ants drown here
+  override val ground = false //only scuba and queen can go there
 }
 
 // Ant colony
@@ -74,8 +72,7 @@ class Cell(p: Point) extends Place(p) {
   def is_clicked(click: Point) = {
     if (click.x < p.x + width && click.x > p.x && click.y < p.y + height && click.y > p.y) { true } else { false }
   }
-  def buy_ant(p: Purse, tun: Tunnel) = {
-  }
+  def buy_ant(p: Purse, tun: Tunnel) = {}
 }
 
 class Bye(p: Point) extends Cell(p) {
@@ -106,8 +103,7 @@ class Hive(L: List[Cell]) extends Place(new Point(0, 0)) { // Technically an ant
   }
 }
 
-// That is where bees come from !
-
+// That is where bees come from 
 class Entrance(p: Point, t: Tunnel) extends Place(p) {
   lazy val exit: Tunnel = t
   var bees: List[Bee] = Nil
@@ -123,8 +119,7 @@ class Entrance(p: Point, t: Tunnel) extends Place(p) {
   }
 }
 
-// This all goes into a linear cave
-
+// A cave is a succession of tunnels and an entrance, it is linked to an hive
 class Cave(alt: Int, h: Hive, tun: Int) {
   val waterProba = 10 //percentage of flooded tunnels
   val altitude: Int = alt

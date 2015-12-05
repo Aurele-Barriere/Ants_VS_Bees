@@ -1,4 +1,4 @@
-/* This project is proudly presented to you by Aurèle Barrière and Rémy Sun for PROG1 */
+/* This project is presented to you by Aurèle Barrière and Rémy Sun for PROG1 */
 
 import java.awt.Color
 import java.awt.Graphics2D
@@ -68,12 +68,11 @@ object AntsBees extends SimpleSwingApplication {
 
     var Bullets: List[Bullet] = Nil
 
-    // Update function
+   
     
-    def update() = {
+    def update() = { //method to call each frame
 
       // Removing dead insects in the tunnels
-
       for (c <- Caves) {
         for (t <- c.Tunnels) {
           t.ant match {
@@ -100,7 +99,6 @@ object AntsBees extends SimpleSwingApplication {
       Bullets = newBullets
 
       // Adding random bees in the entrances
-      
       if (nextTurn) {
         var a = 0
         for (c <- Caves) {
@@ -111,7 +109,6 @@ object AntsBees extends SimpleSwingApplication {
       }
 
       // Insects can now perform actions
-
       for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) { b.hasMoved = false } // At the beginning, none of the bees have moved
 
       if (nextTurn) for (c <- Caves) {
@@ -128,7 +125,7 @@ object AntsBees extends SimpleSwingApplication {
         timer = 0
       }
 
-      // Time is ticking
+      
       
       nextTurn = false
       if (timer == framesPerTurn) {
@@ -141,7 +138,7 @@ object AntsBees extends SimpleSwingApplication {
       if (lost) {
         purse.money = 0
         for (c <- Caves) {
-          c.frequency = 301
+          c.frequency = 601
           for (t <- c.Tunnels) {
 
             t.ant match {
@@ -151,9 +148,7 @@ object AntsBees extends SimpleSwingApplication {
           }
         }
       }
-
     }
-
   }
 
   // Part 2: the User Interface: main panel on which we will paint everything 
@@ -193,7 +188,7 @@ object AntsBees extends SimpleSwingApplication {
       case KeyTyped(_, 'c', _, _) => state.hive.select(state.bodyguard)
       case KeyTyped(_, 'v', _, _) => state.hive.select(state.queen)
       case KeyTyped(_, 'b', _, _) => state.hive.select(state.bye)
-      case KeyTyped(_, 'y', _, _) => state.purse.money = 1000 // Godmode
+      
 
       case _: FocusLost           => repaint()
     }
