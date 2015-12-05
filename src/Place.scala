@@ -9,7 +9,7 @@ class Place(p: Point) {
 
 class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   var exit: Place = ex
-  var entrance: Place = en //this might be ugly, but lazy declaration doesn't work for now
+  var entrance: Place = en 
   val ground = true
   var ant: Option[Ant] = None
   var bees: List[Bee] = Nil
@@ -81,29 +81,14 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
 
   override def buy_ant(p: Purse, tun: Tunnel) = {
     if (AntsBees.state.purse.money > this.typeant.cost && (this.typeant.watersafe || tun.ground)) {
-      this.typeant match {
-        case a: Harvester     => tun.addant(new Harvester(tun))
-        case a: Thrower       => tun.addant(new Thrower(tun))
-        case a: Short_Thrower => tun.addant(new Short_Thrower(tun))
-        case a: Long_Thrower  => tun.addant(new Long_Thrower(tun))
-        case a: Fire          => tun.addant(new Fire(tun))
-        case a: Scuba         => tun.addant(new Scuba(tun))
-        case a: Ninja         => tun.addant(new Ninja(tun))
-        case a: Hungry        => tun.addant(new Hungry(tun))
-        case a: Wall          => tun.addant(new Wall(tun))
-        case a: Bodyguard     => tun.addant(new Bodyguard(tun))
-        case a: Queen         => tun.addant(new Queen(tun))
-        case _                =>
-
-        //to do? or is there a more simpler way? 
-      }
-      /*val args = Array(tun).asInstanceOf[Array[AnyRef]]
-      tun.addant( typeant.getClass.getConstructors()(0).newInstance(args: _*) ) */
+      
+      val args = Array(tun).asInstanceOf[Array[AnyRef]]
+      tun.addant( (typeant.getClass.getConstructors()(0).newInstance(args: _*)).asInstanceOf[Ant]) 
       AntsBees.state.purse.money -= this.typeant.cost //taking money    
     }
   }
 }
-class Hive(L: List[Cell] /*, t: Tunnel*/ ) extends Place(new Point(0, 0)) {
+class Hive(L: List[Cell]) extends Place(new Point(0, 0)) {
   lazy val Cells: List[Cell] = L
   def select(c: Cell) {
     for (cell <- this.Cells) {
