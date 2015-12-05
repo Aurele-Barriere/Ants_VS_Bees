@@ -92,6 +92,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
         case a: Wall          => tun.addant(new Wall(tun))
         case a: Bodyguard     => tun.addant(new Bodyguard(tun))
         case a: Queen         => tun.addant(new Queen(tun))
+        case _ => 
 
         //to do? or is there a more simpler way? 
       }
