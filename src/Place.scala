@@ -46,30 +46,12 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         if (a.canContain(t)) {
           a.ant = Some(t)
           ant = Some(a)
-        }
+   }
       }
     }
-    AntsBees.state.Insects = t :: AntsBees.state.Insects
+    
   }
-  // deprecated neighbour code? You might want to check on this. Yes I don't think we will use it. 
-  def left_neighbour(n: Int): Place = {
-    n match {
-      case 0 => return this
-      case m: Int => this.exit match {
-        case h: Hive   => return h
-        case t: Tunnel => return t.left_neighbour(m - 1)
-      }
-    }
-  }
-  def right_neighbour(n: Int): Place = {
-    n match {
-      case 0 => return this
-      case m: Int => this.entrance match {
-        case e: Entrance => return e
-        case t: Tunnel   => return t.right_neighbour(m - 1)
-      }
-    }
-  }
+  
 }
 
 class Cell(p: Point) extends Place(p) {
@@ -85,7 +67,7 @@ class Cell(p: Point) extends Place(p) {
 
 class Bye(p: Point) extends Cell(p) {
   override def buy_ant(p: Purse, tun: Tunnel) = {
-    tun.removeant()
+    tun.ant match {case Some (a : Queen) => case _ => tun.removeant()}
   }
 }
 
@@ -117,8 +99,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
     }
   }
 }
-class Hive(L: List[Cell]/*, t: Tunnel*/) extends Place(new Point(0, 0)) {
-  //lazy val entrance: Tunnel = t
+class Hive(L: List[Cell] /*, t: Tunnel*/ ) extends Place(new Point(0, 0)) {
   lazy val Cells: List[Cell] = L
   def select(c: Cell) {
     for (cell <- this.Cells) {
@@ -138,7 +119,6 @@ class Entrance(p: Point, t: Tunnel) extends Place(p) {
     if (n > 0) {
       val b = new Bee(this)
       this.bees = b :: this.bees
-      AntsBees.state.Insects = b :: AntsBees.state.Insects
       createbees(n - 1)
     }
   }
@@ -150,25 +130,22 @@ class Cave(alt: Int, h: Hive, tun: Int) {
   val hive: Hive = h
   val numTunnels: Int = tun
   var Tunnels: List[Tunnel] = Nil
-  
+
   val tunnelIcon: ImageIcon = new ImageIcon("img/tunnel.png")
   val waterIcon: ImageIcon = new ImageIcon("img/tunnel_water.png")
-  
-  
+
   val width = tunnelIcon.getIconWidth()
   val height = tunnelIcon.getIconHeight()
   var frequency = 1
-  
-  
+
   val t0 = new Tunnel(new Point(0, 0), null, null, tunnelIcon)
-  var t1 = new Tunnel(new Point(0, alt*height + 300), hive, t0, tunnelIcon)
+  var t1 = new Tunnel(new Point(0, alt * height + 300), hive, t0, tunnelIcon)
   Tunnels = t1 :: Tunnels
   for (i <- 2 to tun) {
     if (AntsBees.state.rng.nextInt(100) > waterProba) {
-    Tunnels = new Tunnel(new Point(width * (i - 1), alt*height + 300), Tunnels.head, t0, tunnelIcon) :: Tunnels
-    }
-    else {
-    Tunnels = new Water(new Point(width * (i - 1), alt*height + 300), Tunnels.head, t0, waterIcon) :: Tunnels 
+      Tunnels = new Tunnel(new Point(width * (i - 1), alt * height + 300), Tunnels.head, t0, tunnelIcon) :: Tunnels
+    } else {
+      Tunnels = new Water(new Point(width * (i - 1), alt * height + 300), Tunnels.head, t0, waterIcon) :: Tunnels
     }
   }
   for (i <- 1 to (tun - 1)) {
