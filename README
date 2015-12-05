@@ -7,6 +7,7 @@ The Game :
 You are controlling an ant colony under the attack of many bees.
 You will have to put ants on the tunnels so they can try to push the attacker away. 
 You will have some food (initially 10) and every ant has a cost.
+The game is turned-based (one turn per second).
 
 The bees :
 They will come randomly in the tunnels. They simply go to the left of the screen or attack any ant that blocks their way.
@@ -51,3 +52,11 @@ When a bee goes through the last tunnel or when the queen die, the ant colony is
 
 Winning :
 There is no way to win this game, bees will always spawn. However, a great battle is more honorable. Each time you kill a bee, your score increases. It is possible to kill more than 3000 bees. Can you do more?
+
+How to play :
+Select a cell and then a tunnel to add an ant. 
+You can also select a cell by pressing the a key (use the second and third rows of an azerty keyboard).
+On the top-right corner, you will see your food and your score.
+You can press 'n' to skip the animation and directly go to the next turn.
+You can press 'a' to save your game, then 'z' to load it. There might still be some bugs with this feature.
+
