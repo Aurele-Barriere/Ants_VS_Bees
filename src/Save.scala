@@ -3,7 +3,6 @@ import java.awt.Point
 
 object savestate {
   val fileName = "saves.txt"
-  val lines = Source.fromFile(fileName).getLines.toArray
   def printToFile(content: String, location: String = fileName) =
     Some(new java.io.PrintWriter(location)).foreach { f => try { f.write(content) } finally { f.close } }
   def save() = {
@@ -50,6 +49,7 @@ object savestate {
     printToFile(saving)
   }
   def load() = {
+    val lines = Source.fromFile(fileName).getLines.toArray
     AntsBees.state.purse.money = lines(0).toInt
     AntsBees.state.uniqueUnits = lines(1).toInt
     AntsBees.state.lost = lines(2).toBoolean
@@ -64,8 +64,8 @@ object savestate {
       // Creating 8 tunnels for the cave
       for (j <- 0 until AntsBees.state.numberTunnels) {
         var occupied = true
-        var ant: Ant = new Harvester(tunnels.head)
         var tunnel = new Tunnel(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.tunnelIcon)
+        var ant: Ant = new Harvester(tunnel)
         val tunnelLine = 4 + (3 - i) * 48 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
         lines(tunnelLine).toInt match {
           case 0 =>
@@ -78,29 +78,29 @@ object savestate {
         lines(tunnelLine + 1).toInt match {
           case 0  => occupied = false
           case 1  =>
-          case 2  => ant = new Thrower(tunnels.head)
-          case 3  => ant = new Short_Thrower(tunnels.head)
-          case 4  => ant = new Long_Thrower(tunnels.head)
-          case 5  => ant = new Fire(tunnels.head)
-          case 6  => ant = new Scuba(tunnels.head)
-          case 7  => ant = new Ninja(tunnels.head)
-          case 8  => ant = new Hungry(tunnels.head)
-          case 9  => ant = new Wall(tunnels.head)
-          case 10 => ant = new Bodyguard(tunnels.head)
-          case 11 => ant = new Queen(tunnels.head)
+          case 2  => ant = new Thrower(tunnel)
+          case 3  => ant = new Short_Thrower(tunnel)
+          case 4  => ant = new Long_Thrower(tunnel)
+          case 5  => ant = new Fire(tunnel)
+          case 6  => ant = new Scuba(tunnel)
+          case 7  => ant = new Ninja(tunnel)
+          case 8  => ant = new Hungry(tunnel)
+          case 9  => ant = new Wall(tunnel)
+          case 10 => ant = new Bodyguard(tunnel)
+          case 11 => ant = new Queen(tunnel)
         }
         if (occupied) {
           ant.armor = lines(tunnelLine + 2).toInt
           ant.damage = lines(tunnelLine + 3).toInt
           ant.buffed = lines(tunnelLine + 4).toBoolean
-          tunnels.head.ant = Some(ant)
+          tunnel.ant = Some(ant)
         }
         for (k <- 0 until lines(tunnelLine + 5).toInt) {
           val b = new Bee(tunnel)
           tunnel.bees = b :: tunnel.bees
         }
         if (j == 7) {
-          cave.entrance = new Entrance(new Point(AntsBees.state.numberTunnels * cave.width, cave.altitude), tunnels.head)
+          cave.entrance = new Entrance(new Point(AntsBees.state.numberTunnels * cave.width, cave.altitude), tunnel)
           tunnel.entrance = cave.entrance
         }
         tunnels = tunnel :: tunnels

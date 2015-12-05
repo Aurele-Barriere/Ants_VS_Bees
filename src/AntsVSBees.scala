@@ -63,7 +63,7 @@ object AntsBees extends SimpleSwingApplication {
 
     // Setting up game elements like money, score and animated bullets
     
-    val purse = new Purse(1000)
+    val purse = new Purse(10)
     var score: Int = 0
 
     var Bullets: List[Bullet] = Nil
@@ -193,6 +193,7 @@ object AntsBees extends SimpleSwingApplication {
       case KeyTyped(_, 'c', _, _) => state.hive.select(state.bodyguard)
       case KeyTyped(_, 'v', _, _) => state.hive.select(state.queen)
       case KeyTyped(_, 'b', _, _) => state.hive.select(state.bye)
+      case KeyTyped(_, 'y', _, _) => state.purse.money = 1000 // Godmode
 
       case _: FocusLost           => repaint()
     }
