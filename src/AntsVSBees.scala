@@ -1,7 +1,7 @@
 /* This project is proudly presented to you by Aurèle Barrière and Rémy Sun for PROG1 */
 
-// Compile with: scalac -cp scala-swing.jar:. FirstTest.scala
-// Then execute with: scala -cp scala-swing.jar:. FirstTest
+// Compile with: scalac -cp scala-swing.jar
+
 
 import java.awt.Color
 import java.awt.Graphics2D
