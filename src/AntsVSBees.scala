@@ -113,7 +113,9 @@ object AntsBees extends SimpleSwingApplication {
 
       if (nextTurn) for (c <- Caves) {
         for (t <- c.Tunnels) {
-          t.ant match { case Some(a) => a.attack() case None => }
+          t.ant match { case Some(a) => a.attack()
+                                        a.ant match {case Some (an : Ant) => an.attack() case None => }
+            case None => }
           for (b <- t.bees) { if (!b.hasMoved) { b.move() } }
         }
         for (b <- c.entrance.bees) { if (!b.hasMoved) { b.move() } }

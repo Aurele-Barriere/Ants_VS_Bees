@@ -29,7 +29,8 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     ant match { case Some(a) => a.armor = 0 case None => }
     ant = None
   }
-  def addant(t: Ant) {
+  def addant(t : Ant) {
+    
     ant match {
       case None =>
         {
@@ -96,6 +97,8 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
 
         //to do? or is there a more simpler way? 
       }
+      /*val args = Array(tun).asInstanceOf[Array[AnyRef]]
+      tun.addant( typeant.getClass.getConstructors()(0).newInstance(args: _*) ) */
       AntsBees.state.purse.money -= this.typeant.cost //taking money    
     }
   }
