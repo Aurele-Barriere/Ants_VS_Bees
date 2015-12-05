@@ -24,16 +24,18 @@ object AntsBees extends SimpleSwingApplication {
 
   object state {
     val rng = scala.util.Random
-    var timer = 0 // timer to emulate real time
+    var timer = 0 // Timer to emulate real time
     val framesPerTurn = 50
     var uniqueUnits = 0 // Number of super units in play.
-    var lost: Boolean = false //have we lost the game?
-    var isQueen: Boolean = false //is there a queen?
+    var lost: Boolean = false // Have we lost the game?
+    var isQueen: Boolean = false // Is there a queen?
     var nextTurn: Boolean = true
     val numberCaves: Int = 4
     val numberTunnels: Int = 8
-    //Defining Cells :
-    val nulpoint = new Point(0, 0) //a abstract tunnel to put the ants in the cells
+    
+    //Defining Cells 
+    
+    val nulpoint = new Point(0, 0) //an abstract tunnel to put the ants in the cells
 
     val t0: Tunnel = new Tunnel(nulpoint, t0, t0, new ImageIcon("img/tunnel.png")) //just a place to put the insects in the hive
 
@@ -59,20 +61,24 @@ object AntsBees extends SimpleSwingApplication {
       Caves = new Cave(i, hive, numberTunnels) :: Caves
     }
 
+    // Setting up game elements like money, score and animated bullets
+    
     val purse = new Purse(1000)
     var score: Int = 0
 
     var Bullets: List[Bullet] = Nil
 
+    // Update function
+    
     def update() = {
 
-      //removing dead insects in the tunnels
+      // Removing dead insects in the tunnels
 
       for (c <- Caves) {
         for (t <- c.Tunnels) {
           t.ant match {
             case Some(a) => if (a.armor < 1) {
-              t.ant = None //wiping the board
+              t.ant = None // Wiping the board
               a.onDeath() // Death effect
             }
             case None =>
@@ -85,7 +91,7 @@ object AntsBees extends SimpleSwingApplication {
         }
       }
 
-      //updating bullets
+      // Updating bullets
       var newBullets: List[Bullet] = Nil
       for (b <- Bullets) {
         b.update()
@@ -93,7 +99,8 @@ object AntsBees extends SimpleSwingApplication {
       }
       Bullets = newBullets
 
-      //adding random bees in the entrances
+      // Adding random bees in the entrances
+      
       if (nextTurn) {
         var a = 0
         for (c <- Caves) {
@@ -103,9 +110,9 @@ object AntsBees extends SimpleSwingApplication {
         }
       }
 
-      //Insects can now perform actions
+      // Insects can now perform actions
 
-      for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) { b.hasMoved = false } // at the beginning, non of the bees have moved
+      for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) { b.hasMoved = false } // At the beginning, none of the bees have moved
 
       if (nextTurn) for (c <- Caves) {
         for (t <- c.Tunnels) {
@@ -130,7 +137,7 @@ object AntsBees extends SimpleSwingApplication {
         timer += 1
       }
 
-      //when we lose the game
+      // When we lose the game
       if (lost) {
         purse.money = 0
         for (c <- Caves) {
@@ -233,7 +240,7 @@ object AntsBees extends SimpleSwingApplication {
           }
         }
       }
-      //drawing bullets
+      // Drawing bullets
       for (b <- state.Bullets) {
         g.drawImage((b.icon).getImage(), b.pos.x, b.pos.y, peer)
       }
