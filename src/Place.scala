@@ -1,5 +1,3 @@
-
-
 import java.awt.Point
 import javax.swing.ImageIcon
 
@@ -9,7 +7,7 @@ class Place(p: Point) {
 
 class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   var exit: Place = ex
-  var entrance: Place = en 
+  var entrance: Place = en
   val ground = true
   var ant: Option[Ant] = None
   var bees: List[Bee] = Nil
@@ -29,13 +27,12 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     ant match { case Some(a) => a.armor = 0 case None => }
     ant = None
   }
-  def addant(t : Ant) {
-    
+  def addant(t: Ant) {
     ant match {
       case None =>
         {
           ant = Some(t)
-          AntsBees.state.purse.money -= t.cost //taking money    
+          AntsBees.state.purse.money -= t.cost
         }
         if (t.unique) {
           AntsBees.state.uniqueUnits += 1
@@ -44,12 +41,12 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         if (t.canContain(a)) {
           t.ant = Some(a)
           ant = Some(t)
-          AntsBees.state.purse.money -= t.cost //taking money    
+          AntsBees.state.purse.money -= t.cost
         }
         if (a.canContain(t)) {
           a.ant = Some(t)
           ant = Some(a)
-          AntsBees.state.purse.money -= t.cost //taking money    
+          AntsBees.state.purse.money -= t.cost
         }
       }
     }
@@ -84,13 +81,13 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
 
   override def buy_ant(p: Purse, tun: Tunnel) = {
     if (AntsBees.state.purse.money >= this.typeant.cost && (this.typeant.watersafe || tun.ground)) {
-      
+
       val args = Array(tun).asInstanceOf[Array[AnyRef]]
-      tun.addant( (typeant.getClass.getConstructors()(0).newInstance(args: _*)).asInstanceOf[Ant]) 
-      
-      }
+      tun.addant((typeant.getClass.getConstructors()(0).newInstance(args: _*)).asInstanceOf[Ant])
+    }
   }
 }
+
 class Hive(L: List[Cell]) extends Place(new Point(0, 0)) {
   lazy val Cells: List[Cell] = L
   def select(c: Cell) {
@@ -122,14 +119,11 @@ class Cave(alt: Int, h: Hive, tun: Int) {
   val hive: Hive = h
   val numTunnels: Int = tun
   var Tunnels: List[Tunnel] = Nil
-
   val tunnelIcon: ImageIcon = new ImageIcon("img/tunnel.png")
   val waterIcon: ImageIcon = new ImageIcon("img/tunnel_water.png")
-
   val width = tunnelIcon.getIconWidth()
   val height = tunnelIcon.getIconHeight()
   var frequency = 1
-
   val t0 = new Tunnel(new Point(0, 0), null, null, tunnelIcon)
   var t1 = new Tunnel(new Point(0, alt * height + 300), hive, t0, tunnelIcon)
   Tunnels = t1 :: Tunnels
