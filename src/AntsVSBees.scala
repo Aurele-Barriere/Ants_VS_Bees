@@ -31,7 +31,7 @@ object AntsBees extends SimpleSwingApplication {
     val framesPerTurn = 50
     var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false //have we lost the game?
-    var isQueen : Boolean = false //is there a queen?
+    var isQueen: Boolean = false //is there a queen?
     var nextTurn: Boolean = true
     val numberCaves: Int = 4
     val numberTunnels: Int = 8
@@ -62,15 +62,12 @@ object AntsBees extends SimpleSwingApplication {
       Caves = new Cave(i, hive, numberTunnels) :: Caves
     }
 
-    val purse = new Purse(100)
-    var score :Int = 0
+    val purse = new Purse(10)
+    var score: Int = 0
 
-    
     var Bullets: List[Bullet] = Nil
 
     def update() = {
-
-      
 
       //removing dead insects in the tunnels
 
@@ -85,7 +82,7 @@ object AntsBees extends SimpleSwingApplication {
           }
           var newbees: List[Bee] = Nil
           for (b <- t.bees) {
-            if ((b.armor > 0) || (!nextTurn && b.deathByBullet)) { newbees = b :: newbees } else {score = score +1}
+            if ((b.armor > 0) || (!nextTurn && b.deathByBullet)) { newbees = b :: newbees } else { score = score + 1 }
           }
           t.bees = newbees
         }
@@ -101,28 +98,27 @@ object AntsBees extends SimpleSwingApplication {
 
       //adding random bees in the entrances
       if (nextTurn) {
-
+        var a = 0
         for (c <- Caves) {
-
-          if (rng.nextInt(100) < c.frequency) { c.entrance.createbees((c.frequency / 50) + 1) }
-          else { c.frequency += 1 }
+          a = rng.nextInt(100)
+          if (a < c.frequency) { c.entrance.createbees(((c.frequency-a) / 50) + 1) }
+          c.frequency += 1
 
         }
       }
 
       //Insects can now perform actions
 
-      for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) {b.hasMoved = false}
-      
+      for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) { b.hasMoved = false }
+
       if (nextTurn) for (c <- Caves) {
         for (t <- c.Tunnels) {
-          t.ant match {case Some(a) => a.attack() case None => }
-          for (b <- t.bees) {if (!b.hasMoved) {b.move()}}
+          t.ant match { case Some(a) => a.attack() case None => }
+          for (b <- t.bees) { if (!b.hasMoved) { b.move() } }
         }
-        for (b <- c.entrance.bees) {if (!b.hasMoved) {b.move()}}
+        for (b <- c.entrance.bees) { if (!b.hasMoved) { b.move() } }
         timer = 0
       }
-      
 
       nextTurn = false
       if (timer == framesPerTurn) {
@@ -133,13 +129,14 @@ object AntsBees extends SimpleSwingApplication {
 
       //when we loose the game
       if (lost) {
+        purse.money = 0
         for (c <- Caves) {
           c.frequency = 301
           for (t <- c.Tunnels) {
 
             t.ant match {
-              case Some(a :Ninja) => a.armor = 0
-              case _    =>
+              case Some(a: Ninja) => a.armor = 0
+              case _              =>
             }
           }
         }
@@ -148,7 +145,7 @@ object AntsBees extends SimpleSwingApplication {
     }
     /* reset(): to do*/
     def reset() = {
-      
+
     }
   }
 
@@ -184,11 +181,11 @@ object AntsBees extends SimpleSwingApplication {
     override def paintComponent(g: Graphics2D) = {
       super.paintComponent(g)
       g.setColor(new Color(100, 100, 100))
-      
+
       val pos = getPos()
 
       g.drawString("food : " + state.purse.money, size.width - 200, 10)
-      g.drawString("score : " + state.score, size.width -200, 30)
+      g.drawString("score : " + state.score, size.width - 200, 30)
       if (state.lost) { g.drawString("lost", 0, 0) }
       g.setColor(Color.black)
 
@@ -206,7 +203,7 @@ object AntsBees extends SimpleSwingApplication {
           t.ant match {
             case Some(a) =>
               g.drawImage(a.im, a.location.pos.x, a.location.pos.y, peer)
-              a.ant match {case Some(ant) => g.drawImage(ant.im, ant.location.pos.x, ant.location.pos.y, peer) case None => }
+              a.ant match { case Some(ant) => g.drawImage(ant.im, ant.location.pos.x, ant.location.pos.y, peer) case None => }
               if (!a.blocksPath) { blocks = false }
             case None => blocks = false
           }
@@ -219,7 +216,7 @@ object AntsBees extends SimpleSwingApplication {
             case 4 => g.drawImage(new ImageIcon("img/4bee.png").getImage(), pos, t.pos.y, peer)
             case 5 => g.drawImage(new ImageIcon("img/5bee.png").getImage(), pos, t.pos.y, peer)
             case 0 =>
-            case _ => g.drawImage(new ImageIcon("img/6bee.png").getImage(), pos, t.pos.y, peer)
+            case _ => g.drawImage(new ImageIcon("img/6bee.png").getImage(), pos, t.pos.y, peer) //6 bees or more
           }
         }
       }

@@ -83,7 +83,7 @@ class Harvester(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_harvester.png")
   override def attack() = { AntsBees.state.purse.add_money(1) }
 }
 
-class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 2) {
+class Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_thrower.png"), 1, 6) {
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
       case t: Tunnel => t.bees match {
@@ -149,7 +149,7 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
 
 // Gimmicky ants
 
-class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 3, 5) {
+class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 3, 6) {
   damage = 3
   override def onDeath() = {
     for (b <- p.bees) {
@@ -158,7 +158,7 @@ class Fire(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_fire.png"), 3, 5) {
   }
 }
 
-class Scuba(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 1, 5) {
+class Scuba(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_scuba.png"), 1, 8) {
   override val watersafe = true
   def attacking(pl: Tunnel): Unit = {
     pl.entrance match {
@@ -179,7 +179,7 @@ class Wall(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_wall.png"), 4, 4) {
   damage = 0
 }
 
-class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) {
+class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 10) {
   override val blocksPath = false
   override def attack(): Unit = {
     p.bees match {
@@ -189,13 +189,14 @@ class Ninja(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_ninja.png"), 1, 6) 
   }
 }
 
-class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 3, 4) {
+class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 3, 5) {
   var digesting = 0
   damage = 0
   def eat(): Unit = {
     if (p.bees != Nil) {
       p.bees.head.armor = 0
       this.digesting = 3
+      if (this.armor < 3) {this.armor += AntsBees.state.rng.nextInt(1)}
     }
   }
   def digest(): Unit = {
@@ -218,7 +219,7 @@ class Hungry(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_hungry.png"), 3, 4
   }
 }
 
-class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2, 4) {
+class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2, 3) {
   override val container = true
   override def onDeath() = {
     this.ant match {
@@ -230,7 +231,7 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 
 // Here comes the queen
 
-class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 6) {
+class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 30) {
   override val unique = true
   override val watersafe = true
   var isImpostor :Boolean = false // is this an impostor queen ?
