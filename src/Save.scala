@@ -17,8 +17,10 @@ object savestate {
     
     var saving = AntsBees.state.purse.money.toString() + "\n" 
     saving += AntsBees.state.uniqueUnits.toString() + "\n" 
-    saving += AntsBees.state.lost.toString() + "\n" // 
+    saving += AntsBees.state.lost.toString() + "\n"  
     saving += AntsBees.state.timer.toString() + "\n"
+    saving += AntsBees.state.isQueen.toString() + "\n"
+    saving += AntsBees.state.score.toString() + "\n"
     
       // Information relative to caves
     
@@ -87,6 +89,9 @@ object savestate {
     AntsBees.state.uniqueUnits = lines(1).toInt
     AntsBees.state.lost = lines(2).toBoolean
     AntsBees.state.timer = lines(3).toInt
+    AntsBees.state.isQueen = lines(4).toBoolean
+    AntsBees.state.score = lines(5).toInt
+    AntsBees.state.Bullets = Nil
     
     // Creating 4 caves
     
@@ -108,7 +113,7 @@ object savestate {
       
       for (j <- 0 until AntsBees.state.numberTunnels) {
         
-        val tunnelLine = 4 + (3 - i) * 48 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
+        val tunnelLine = 6 + (3 - i) * 48 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
         
         var tunnel = new Tunnel(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.tunnelIcon) // Default tunnel
         
