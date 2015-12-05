@@ -46,12 +46,12 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         if (a.canContain(t)) {
           a.ant = Some(t)
           ant = Some(a)
-   }
+        }
       }
     }
-    
+
   }
-  
+
 }
 
 class Cell(p: Point) extends Place(p) {
@@ -67,7 +67,7 @@ class Cell(p: Point) extends Place(p) {
 
 class Bye(p: Point) extends Cell(p) {
   override def buy_ant(p: Purse, tun: Tunnel) = {
-    tun.ant match {case Some (a : Queen) => case _ => tun.removeant()}
+    tun.ant match { case Some(a: Queen) => case _ => tun.removeant() }
   }
 }
 
@@ -92,7 +92,7 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
         case a: Wall          => tun.addant(new Wall(tun))
         case a: Bodyguard     => tun.addant(new Bodyguard(tun))
         case a: Queen         => tun.addant(new Queen(tun))
-        case _ => 
+        case _                =>
 
         //to do? or is there a more simpler way? 
       }

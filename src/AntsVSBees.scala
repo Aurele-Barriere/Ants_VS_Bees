@@ -101,7 +101,7 @@ object AntsBees extends SimpleSwingApplication {
         var a = 0
         for (c <- Caves) {
           a = rng.nextInt(100)
-          if (a < c.frequency) { c.entrance.createbees(((c.frequency-a) / 50) + 1) }
+          if (a < c.frequency) { c.entrance.createbees(((c.frequency - a) / 50) + 1) }
           c.frequency += 1
 
         }
@@ -143,10 +143,7 @@ object AntsBees extends SimpleSwingApplication {
       }
 
     }
-    /* reset(): to do*/
-    def reset() = {
-
-    }
+    
   }
 
   // Part 2: the User Interface: main panel on which we will paint everything 
@@ -171,10 +168,22 @@ object AntsBees extends SimpleSwingApplication {
 
         requestFocusInWindow()
 
-      case KeyTyped(_, 'c', _, _) => state.reset()
+      
       case KeyTyped(_, 'n', _, _) => state.nextTurn = true
       case KeyTyped(_, 'a', _, _) => savestate.save()
       case KeyTyped(_, 'z', _, _) => savestate.load()
+      case KeyTyped(_, 'q', _, _) => state.hive.select(state.harvester)
+      case KeyTyped(_, 's', _, _) => state.hive.select(state.thrower)
+      case KeyTyped(_, 'd', _, _) => state.hive.select(state.short)
+      case KeyTyped(_, 'f', _, _) => state.hive.select(state.long)
+      case KeyTyped(_, 'g', _, _) => state.hive.select(state.fire)
+      case KeyTyped(_, 'h', _, _) => state.hive.select(state.scuba)
+      case KeyTyped(_, 'j', _, _) => state.hive.select(state.wall)
+      case KeyTyped(_, 'w', _, _) => state.hive.select(state.ninja)
+      case KeyTyped(_, 'x', _, _) => state.hive.select(state.hungry)
+      case KeyTyped(_, 'c', _, _) => state.hive.select(state.bodyguard)
+      case KeyTyped(_, 'v', _, _) => state.hive.select(state.queen)
+      case KeyTyped(_, 'b', _, _) => state.hive.select(state.bye)
 
       case _: FocusLost           => repaint()
     }
@@ -230,6 +239,7 @@ object AntsBees extends SimpleSwingApplication {
       for (c <- state.hive.Cells) {
         c match {
           case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
+                             g.drawString((a.typeant.cost).toString(), a.pos.x + (c.width/2), a.pos.y + (c.height / 5))
           case b: Bye     => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
         }
         if (c.is_selected) {
