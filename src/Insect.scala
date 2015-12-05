@@ -1,23 +1,14 @@
-
-
 import java.awt.Point
 import javax.swing.ImageIcon
 
 class Insect(p: Place, ico: ImageIcon, arm: Int) {
   var location: Place = p
-
   var icon: ImageIcon = ico
   var im = icon.getImage()
-  val width: Int = icon.getIconWidth()
-  val height: Int = icon.getIconHeight()
   val watersafe = false
   var armor: Int = arm //when goes down to 0, the insect dies 
 
-  def inSprite(p: Point) = { //returns true if a given point is in the sprite. is this used?
-    (location.pos.x < p.x && p.x < location.pos.x + width &&
-      location.pos.y < p.y && p.y < location.pos.y + height)
-  }
-  def onDeath(): Unit = {} // Not sure about the name, pretty cool kiskool death effect
+  def onDeath(): Unit = {} //death effect
 }
 
 class Bee(p: Place) extends Insect(p, new ImageIcon("img/1bee.png"), 2) {
@@ -131,7 +122,7 @@ class Long_Thrower(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_longthrower.
           AntsBees.state.Bullets = new Bullet(this.location.pos, t.exit.pos, new ImageIcon("img/long_bullet.png")) :: AntsBees.state.Bullets
           if (l.head.armor == 0) { l.head.deathByBullet = true }
       }
-      case e: Entrance => //empty case so scala doesn't freaks out
+      case _: Entrance => 
     }
   }
   //We first need to jump over the dead space
@@ -231,7 +222,7 @@ class Bodyguard(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_weeds.png"), 2,
 
 // Here comes the queen
 
-class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 30) {
+class Queen(p: Tunnel) extends Ant(p, new ImageIcon("img/ant_queen.png"), 2, 500) {
   override val unique = true
   override val watersafe = true
   var isImpostor: Boolean = false // is this an impostor queen ?

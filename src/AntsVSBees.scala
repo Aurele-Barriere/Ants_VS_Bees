@@ -36,7 +36,7 @@ object AntsBees extends SimpleSwingApplication {
     val numberCaves: Int = 4
     val numberTunnels: Int = 8
     //Defining Cells :
-    val nulpoint = new Point(0, 0)
+    val nulpoint = new Point(0, 0) //a abstract tunnel to put the ants in the cells
 
     val t0: Tunnel = new Tunnel(nulpoint, t0, t0, new ImageIcon("img/tunnel.png")) //just a place to put the insects in the hive
 
@@ -103,19 +103,21 @@ object AntsBees extends SimpleSwingApplication {
           a = rng.nextInt(100)
           if (a < c.frequency) { c.entrance.createbees(((c.frequency - a) / 50) + 1) }
           c.frequency += 1
-
         }
       }
 
       //Insects can now perform actions
 
-      for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) { b.hasMoved = false }
+      for (c <- Caves) for (t <- c.Tunnels) for (b <- t.bees) { b.hasMoved = false } // at the beginning, non of the bees have moved
 
       if (nextTurn) for (c <- Caves) {
         for (t <- c.Tunnels) {
-          t.ant match { case Some(a) => a.attack()
-                                        a.ant match {case Some (an : Ant) => an.attack() case None => }
-            case None => }
+          t.ant match {
+            case Some(a) =>
+              a.attack()
+              a.ant match { case Some(an: Ant) => an.attack() case None => }
+            case None =>
+          }
           for (b <- t.bees) { if (!b.hasMoved) { b.move() } }
         }
         for (b <- c.entrance.bees) { if (!b.hasMoved) { b.move() } }
@@ -145,7 +147,7 @@ object AntsBees extends SimpleSwingApplication {
       }
 
     }
-    
+
   }
 
   // Part 2: the User Interface: main panel on which we will paint everything 
@@ -170,7 +172,6 @@ object AntsBees extends SimpleSwingApplication {
 
         requestFocusInWindow()
 
-      
       case KeyTyped(_, 'n', _, _) => state.nextTurn = true
       case KeyTyped(_, 'a', _, _) => savestate.save()
       case KeyTyped(_, 'z', _, _) => savestate.load()
@@ -240,9 +241,10 @@ object AntsBees extends SimpleSwingApplication {
 
       for (c <- state.hive.Cells) {
         c match {
-          case a: CellAnt => g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
-                             g.drawString((a.typeant.cost).toString(), a.pos.x + (c.width/2), a.pos.y + (c.height / 5))
-          case b: Bye     => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
+          case a: CellAnt =>
+            g.drawImage(a.typeant.im, a.pos.x, a.pos.y, peer)
+            g.drawString((a.typeant.cost).toString(), a.pos.x + (c.width / 2), a.pos.y + (c.height / 5))
+          case b: Bye => g.drawImage((new ImageIcon("img/remover.png")).getImage(), b.pos.x, b.pos.y, peer)
         }
         if (c.is_selected) {
           val boxPath = new geom.GeneralPath
