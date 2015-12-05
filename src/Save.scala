@@ -54,11 +54,10 @@ object savestate {
     AntsBees.state.uniqueUnits = lines(1).toInt
     AntsBees.state.lost = lines(2).toBoolean
     AntsBees.state.timer = lines(3).toInt
-    var insects: List[Insect] = Nil
-    var caves: List[Cave] = List()
+    var caves: List[Cave] = Nil
     for (i <- 0 until AntsBees.state.numberCaves) {
       var cave = new Cave(i, AntsBees.state.hive, AntsBees.state.numberTunnels)
-      var tunnels: List[Tunnel] = List()
+      var tunnels: List[Tunnel] = Nil
       val t0 = new Tunnel(new Point(0, 0), null, null, cave.tunnelIcon)
       tunnels = t0 :: tunnels
       for (j <- 0 until AntsBees.state.numberTunnels) {
@@ -91,12 +90,10 @@ object savestate {
           ant.damage = lines(tunnelLine + 3).toInt
           ant.buffed = lines(tunnelLine + 4).toBoolean
           tunnels.head.ant = Some(ant)
-          insects = ant :: insects
         }
         for (k <- 0 until lines(tunnelLine + 5).toInt) {
           val b = new Bee(tunnels.head)
           tunnels.head.bees = b :: tunnels.head.bees
-          insects = b :: insects
         }
       }
       tunnels = tunnels diff List(t0)

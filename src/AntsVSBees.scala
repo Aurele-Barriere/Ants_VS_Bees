@@ -103,7 +103,6 @@ object AntsBees extends SimpleSwingApplication {
           a = rng.nextInt(100)
           if (a < c.frequency) { c.entrance.createbees(((c.frequency - a) / 50) + 1) }
           c.frequency += 1
-
         }
       }
 
@@ -129,7 +128,7 @@ object AntsBees extends SimpleSwingApplication {
         timer += 1
       }
 
-      //when we loose the game
+      //when we lose the game
       if (lost) {
         purse.money = 0
         for (c <- Caves) {
