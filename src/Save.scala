@@ -16,7 +16,7 @@ object savestate {
       // General game state
     
     var saving = AntsBees.state.purse.money.toString() + "\n" 
-    saving += AntsBees.state.uniqueUnits.toString() + "\n" 
+    saving += "\n" 
     saving += AntsBees.state.lost.toString() + "\n"  
     saving += AntsBees.state.timer.toString() + "\n"
     saving += AntsBees.state.isQueen.toString() + "\n"
@@ -78,11 +78,11 @@ object savestate {
                   var stats = ""
                   stats += b.armor.toString()
                   stats += b.damage.toString()
-                  if (b.buffed) {
+                  /*if (b.buffed) {
                     stats += "1"
                   } else {
                     stats += "0"
-                  }
+                  }*/
                   saving += stats + "\n"
                   }
               }
@@ -90,7 +90,7 @@ object savestate {
             }
             saving += a.armor.toString() + "\n" // armor
             saving += a.damage.toString() + "\n" //damage
-            saving += a.buffed.toString() + "\n"
+            saving += "\n"
           }
         }
         var bees = ""
@@ -117,7 +117,7 @@ object savestate {
       // General game state
     
     AntsBees.state.purse.money = lines(0).toInt
-    AntsBees.state.uniqueUnits = lines(1).toInt
+    //AntsBees.state.uniqueUnits = lines(1).toInt
     AntsBees.state.lost = lines(2).toBoolean
     AntsBees.state.timer = lines(3).toInt
     AntsBees.state.isQueen = lines(4).toBoolean
@@ -195,7 +195,7 @@ object savestate {
               case Some(a) => {
                 ant.armor = lines(tunnelLine + 2).toList.apply(0).asDigit
                 ant.damage = lines(tunnelLine + 2).toList.apply(1).asDigit
-                ant.buffed = (lines(tunnelLine + 2).toList.apply(2) == "1")
+                //ant.buffed = (lines(tunnelLine + 2).toList.apply(2) == "1")
               }
             }
           }
@@ -203,7 +203,7 @@ object savestate {
         if (occupied) {
           ant.armor = lines(tunnelLine + 3).toInt
           ant.damage = lines(tunnelLine + 4).toInt
-          ant.buffed = lines(tunnelLine + 5).toBoolean
+          //ant.buffed = lines(tunnelLine + 5).toBoolean
           tunnel.ant = Some(ant)
         }
         
