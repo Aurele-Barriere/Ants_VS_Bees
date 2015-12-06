@@ -49,19 +49,19 @@ object savestate {
           case None => saving += "0\n\n\n\n"
           case Some(a) => { // type ant
             a match {
-              case a: Harvester     => saving += "1\n"
-              case a: Thrower       => saving += "2\n"
-              case a: Short_Thrower => saving += "3\n"
-              case a: Long_Thrower  => saving += "4\n"
-              case a: Fire          => saving += "5\n"
-              case a: Scuba         => saving += "6\n"
-              case a: Ninja         => saving += "7\n"
-              case a: Hungry        => saving += "8\n"
-              case a: Wall          => saving += "9\n"
-              case a: Queen         => saving += "10\n"
+              case a: Harvester     => saving += "1\n\n"
+              case a: Thrower       => saving += "2\n\n"
+              case a: Short_Thrower => saving += "3\n\n"
+              case a: Long_Thrower  => saving += "4\n\n"
+              case a: Fire          => saving += "5\n\n"
+              case a: Scuba         => saving += "6\n\n"
+              case a: Ninja         => saving += "7\n\n"
+              case a: Hungry        => saving += "8\n\n"
+              case a: Wall          => saving += "9\n\n"
+              case a: Queen         => saving += "10\n\n"
               case a: Bodyguard     => {
                 a.ant match {
-                  case None => saving += "21\n"
+                  case None => saving += "21\n\n"
                   case Some(b) =>  {
                     b match {
                         case b: Harvester     => saving += "11\n"
@@ -75,6 +75,15 @@ object savestate {
                         case b: Wall          => saving += "19\n"
                         case b: Queen         => saving += "20\n"
                   }
+                  var stats = ""
+                  stats += b.armor.toString()
+                  stats += b.damage.toString()
+                  if (b.buffed) {
+                    stats += "1"
+                  } else {
+                    stats += "0"
+                  }
+                  saving += stats + "\n"
                   }
               }
               }
@@ -135,7 +144,7 @@ object savestate {
       
       for (j <- 0 until AntsBees.state.numberTunnels) {
         
-        val tunnelLine = 6 + (3 - i) * 48 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
+        val tunnelLine = 6 + (3 - i) * 56 + (7 - j) * 7 // Index of the first term of the current tunnel in saves.txt
         
         var tunnel = new Tunnel(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.tunnelIcon) // Default tunnel
         
@@ -181,12 +190,20 @@ object savestate {
               case 20  => ant.ant = Some(new Queen(tunnel))
               case _ =>
             }
+            ant.ant match {
+              case None =>
+              case Some(a) => {
+                ant.armor = lines(tunnelLine + 2).toList.apply(0).asDigit
+                ant.damage = lines(tunnelLine + 2).toList.apply(1).asDigit
+                ant.buffed = (lines(tunnelLine + 2).toList.apply(2) == "1")
+              }
+            }
           }
         }
         if (occupied) {
-          ant.armor = lines(tunnelLine + 2).toInt
-          ant.damage = lines(tunnelLine + 3).toInt
-          ant.buffed = lines(tunnelLine + 4).toBoolean
+          ant.armor = lines(tunnelLine + 3).toInt
+          ant.damage = lines(tunnelLine + 4).toInt
+          ant.buffed = lines(tunnelLine + 5).toBoolean
           tunnel.ant = Some(ant)
         }
         
