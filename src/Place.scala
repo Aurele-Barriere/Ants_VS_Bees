@@ -37,7 +37,6 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
         {
           ant = Some(t)
           AntsBees.state.purse.money -= t.cost
-
         }
       case Some(a) => {
         if (t.canContain(a)) {
@@ -83,13 +82,14 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
   override def buy_ant(p: Purse, tun: Tunnel) = {
     if (AntsBees.state.purse.money >= this.typeant.cost && (this.typeant.watersafe || tun.ground)) {
       this.typeant match {
-        case q : Queen => val nq = new Queen(tun)
-        if (AntsBees.state.isQueen) { nq.isImpostor = true }
+        case q: Queen =>
+          val nq = new Queen(tun)
+          if (AntsBees.state.isQueen) { nq.isImpostor = true }
           tun.addant(nq)
 
         case _ =>
-      val args = Array(tun).asInstanceOf[Array[AnyRef]]
-      tun.addant((typeant.getClass.getConstructors()(0).newInstance(args: _*)).asInstanceOf[Ant])
+          val args = Array(tun).asInstanceOf[Array[AnyRef]]
+          tun.addant((typeant.getClass.getConstructors()(0).newInstance(args: _*)).asInstanceOf[Ant])
       }
     }
   }

@@ -31,9 +31,9 @@ object AntsBees extends SimpleSwingApplication {
     var nextTurn: Boolean = true
     val numberCaves: Int = 4
     val numberTunnels: Int = 8
-    
+
     //Defining Cells 
-    
+
     val nulpoint = new Point(0, 0) //an abstract tunnel to put the ants in the cells
 
     val t0: Tunnel = new Tunnel(nulpoint, t0, t0, new ImageIcon("img/tunnel.png")) //just a place to put the insects in the hive
@@ -61,25 +61,23 @@ object AntsBees extends SimpleSwingApplication {
     }
 
     // Setting up game elements like money, score and animated bullets
-    
+
     val purse = new Purse(10)
     var score: Int = 0
 
     var Bullets: List[Bullet] = Nil
 
-   
-    
     def update() = { //method to call each frame
       // Removing dead insects in the tunnels
       for (c <- Caves) {
         for (t <- c.Tunnels) {
           t.ant match {
-            case Some(a) => 
-              a.ant match{ case Some(b) => if (b.armor<1) {a.ant = None; b.onDeath()} case _ =>}
+            case Some(a) =>
+              a.ant match { case Some(b) => if (b.armor < 1) { a.ant = None; b.onDeath() } case _ => }
               if (a.armor < 1) {
-              t.ant = None // Wiping the board
-              a.onDeath() // Death effect
-            }
+                t.ant = None // Wiping the board
+                a.onDeath() // Death effect
+              }
             case None =>
           }
           var newbees: List[Bee] = Nil
@@ -125,8 +123,6 @@ object AntsBees extends SimpleSwingApplication {
         timer = 0
       }
 
-      
-      
       nextTurn = false
       if (timer == framesPerTurn) {
         nextTurn = true
@@ -188,7 +184,6 @@ object AntsBees extends SimpleSwingApplication {
       case KeyTyped(_, 'c', _, _) => state.hive.select(state.bodyguard)
       case KeyTyped(_, 'v', _, _) => state.hive.select(state.queen)
       case KeyTyped(_, 'b', _, _) => state.hive.select(state.bye)
-      
 
       case _: FocusLost           => repaint()
     }
