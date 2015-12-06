@@ -175,6 +175,7 @@ object savestate {
               case 18  => ant.ant = Some(new Hungry(tunnel))
               case 19  => ant.ant = Some(new Wall(tunnel))
               case 20  => ant.ant = Some(new Queen(tunnel))
+              case _ =>
             }
           }
         }
