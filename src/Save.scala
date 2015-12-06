@@ -92,6 +92,7 @@ object savestate {
         }
         saving += bees + "\n" // number of bees
       }
+     saving += cave.frequency + "\n" 
     }
     
     // Now we print what we just learned
@@ -136,7 +137,7 @@ object savestate {
       
       for (j <- 0 until AntsBees.state.numberTunnels) {
         
-        val tunnelLine = 5 + (3 - i) * 48 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
+        val tunnelLine = 5 + (3 - i) * 49 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
         
         var tunnel = new Tunnel(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.tunnelIcon) // Default tunnel
         
@@ -228,6 +229,7 @@ object savestate {
       // Finalizing cave
       
       cave.Tunnels = tunnels
+      cave.frequency = lines(5 + (3 - i) * 49 + 48).toInt
       caves = cave :: caves
     }
     
