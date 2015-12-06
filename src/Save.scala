@@ -58,8 +58,26 @@ object savestate {
               case a: Ninja         => saving += "7\n"
               case a: Hungry        => saving += "8\n"
               case a: Wall          => saving += "9\n"
-              case a: Bodyguard     => saving += "10\n"
-              case a: Queen         => saving += "11\n"
+              case a: Queen         => saving += "10\n"
+              case a: Bodyguard     => {
+                a.ant match {
+                  case None => saving += "21\n"
+                  case Some(b) =>  {
+                    b match {
+                        case b: Harvester     => saving += "11\n"
+                        case b: Thrower       => saving += "12\n"
+                        case b: Short_Thrower => saving += "13\n"
+                        case b: Long_Thrower  => saving += "14\n"
+                        case b: Fire          => saving += "15\n"
+                        case b: Scuba         => saving += "16\n"
+                        case b: Ninja         => saving += "17\n"
+                        case b: Hungry        => saving += "18\n"
+                        case b: Wall          => saving += "19\n"
+                        case b: Queen         => saving += "20\n"
+                  }
+                  }
+              }
+              }
             }
             saving += a.armor.toString() + "\n" // armor
             saving += a.damage.toString() + "\n" //damage
@@ -143,8 +161,22 @@ object savestate {
           case 7  => ant = new Ninja(tunnel)
           case 8  => ant = new Hungry(tunnel)
           case 9  => ant = new Wall(tunnel)
-          case 10 => ant = new Bodyguard(tunnel)
-          case 11 => ant = new Queen(tunnel)
+          case 10 => ant = new Queen(tunnel)
+          case _ => {
+            ant = new Bodyguard(tunnel)
+            lines(tunnelLine + 1).toInt match {
+              case 11  => ant.ant = Some(new Harvester(tunnel))
+              case 12  => ant.ant = Some(new Thrower(tunnel))
+              case 13  => ant.ant = Some(new Short_Thrower(tunnel))
+              case 14  => ant.ant = Some(new Long_Thrower(tunnel))
+              case 15  => ant.ant = Some(new Fire(tunnel))
+              case 16  => ant.ant = Some(new Scuba(tunnel))
+              case 17  => ant.ant = Some(new Ninja(tunnel))
+              case 18  => ant.ant = Some(new Hungry(tunnel))
+              case 19  => ant.ant = Some(new Wall(tunnel))
+              case 20  => ant.ant = Some(new Queen(tunnel))
+            }
+          }
         }
         if (occupied) {
           ant.armor = lines(tunnelLine + 2).toInt
