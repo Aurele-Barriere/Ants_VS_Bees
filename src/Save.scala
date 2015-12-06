@@ -46,7 +46,7 @@ object savestate {
           // What kind of ant is living here  
         
         tunnel.ant match {
-          case None => saving += "0\n\n\n\n"
+          case None => saving += "0\n\n\n\n\n"
           case Some(a) => { // type ant
             a match {
               case a: Harvester     => saving += "1\n\n"
@@ -209,7 +209,7 @@ object savestate {
         
         // Adding in bees
         
-        for (a <- lines(tunnelLine + 5).toList) {
+        for (a <- lines(tunnelLine + 6).toList) {
           var b = new Bee(tunnel)
           b.armor = a.asDigit
           tunnel.bees = b :: tunnel.bees
