@@ -9,17 +9,17 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
   var exit: Place = ex // Place "to the left"
   var entrance: Place = en // Place "to the right"
   val ground = true
-  var ant: Option[Ant] = None 
-  var bees: List[Bee] = Nil 
+  var ant: Option[Ant] = None
+  var bees: List[Bee] = Nil
   val icon: ImageIcon = ico
   val im = icon.getImage()
 
   def is_clicked(click: Point) = {
     if (click.x < p.x + icon.getIconWidth() && click.x > p.x && click.y < p.y + icon.getIconHeight() && click.y > p.y) { true } else { false }
   }
-  
+
   // Methods to add insects
-  
+
   def addbee(b: Bee) = {
     bees = b :: bees
   }
@@ -31,17 +31,13 @@ class Tunnel(p: Point, ex: Place, en: Place, ico: ImageIcon) extends Place(p) {
     ant = None
   }
   def addant(t: Ant) {
+
     ant match {
       case None =>
         {
           ant = Some(t)
           AntsBees.state.purse.money -= t.cost
-        }
-        if (t.unique) {
-          if (AntsBees.state.uniqueUnits != 0) {
-            t.isImpostor = true
-          }
-          AntsBees.state.uniqueUnits += 1
+
         }
       case Some(a) => {
         if (t.canContain(a)) {
@@ -86,9 +82,15 @@ class CellAnt(p: Point, t: Ant) extends Cell(p) {
 
   override def buy_ant(p: Purse, tun: Tunnel) = {
     if (AntsBees.state.purse.money >= this.typeant.cost && (this.typeant.watersafe || tun.ground)) {
+      this.typeant match {
+        case q : Queen => val nq = new Queen(tun)
+        if (AntsBees.state.isQueen) { nq.isImpostor = true }
+          tun.addant(nq)
 
+        case _ =>
       val args = Array(tun).asInstanceOf[Array[AnyRef]]
       tun.addant((typeant.getClass.getConstructors()(0).newInstance(args: _*)).asInstanceOf[Ant])
+      }
     }
   }
 }
@@ -132,9 +134,9 @@ class Cave(alt: Int, h: Hive, tun: Int) {
   val height = tunnelIcon.getIconHeight()
   var frequency = 1 // Frequency indicator for the spawn rate of bees
   val t0 = new Tunnel(new Point(0, 0), null, null, tunnelIcon) // Placeholder tunnel
-  
+
   // Creating a first draft of tunnels
-  
+
   var t1 = new Tunnel(new Point(0, alt * height + 300), hive, t0, tunnelIcon)
   Tunnels = t1 :: Tunnels
   for (i <- 2 to tun) {
@@ -144,11 +146,11 @@ class Cave(alt: Int, h: Hive, tun: Int) {
       Tunnels = new Water(new Point(width * (i - 1), altitude * height + 300), Tunnels.head, t0, waterIcon) :: Tunnels
     }
   }
-  
+
   // Assigning their entrance to every tunnel listed
-  
+
   for (i <- 1 to (numTunnels - 1)) {
-    Tunnels.apply(i).entrance = Tunnels.apply(i - 1) 
+    Tunnels.apply(i).entrance = Tunnels.apply(i - 1)
   }
   var entrance = new Entrance(new Point(numTunnels * width, altitude), Tunnels.head)
   Tunnels.head.entrance = entrance

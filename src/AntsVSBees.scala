@@ -26,7 +26,6 @@ object AntsBees extends SimpleSwingApplication {
     val rng = scala.util.Random
     var timer = 0 // Timer to emulate real time
     val framesPerTurn = 50
-    var uniqueUnits = 0 // Number of super units in play.
     var lost: Boolean = false // Have we lost the game?
     var isQueen: Boolean = false // Is there a queen?
     var nextTurn: Boolean = true
@@ -71,12 +70,13 @@ object AntsBees extends SimpleSwingApplication {
    
     
     def update() = { //method to call each frame
-
       // Removing dead insects in the tunnels
       for (c <- Caves) {
         for (t <- c.Tunnels) {
           t.ant match {
-            case Some(a) => if (a.armor < 1) {
+            case Some(a) => 
+              a.ant match{ case Some(b) => if (b.armor<1) {a.ant = None; b.onDeath()} case _ =>}
+              if (a.armor < 1) {
               t.ant = None // Wiping the board
               a.onDeath() // Death effect
             }
