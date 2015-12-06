@@ -16,7 +16,6 @@ object savestate {
       // General game state
     
     var saving = AntsBees.state.purse.money.toString() + "\n" 
-    saving += "\n" 
     saving += AntsBees.state.lost.toString() + "\n"  
     saving += AntsBees.state.timer.toString() + "\n"
     saving += AntsBees.state.isQueen.toString() + "\n"
@@ -46,7 +45,7 @@ object savestate {
           // What kind of ant is living here  
         
         tunnel.ant match {
-          case None => saving += "0\n\n\n\n\n"
+          case None => saving += "0\n\n\n\n"
           case Some(a) => { // type ant
             a match {
               case a: Harvester     => saving += "1\n\n"
@@ -78,11 +77,6 @@ object savestate {
                   var stats = ""
                   stats += b.armor.toString()
                   stats += b.damage.toString()
-                  /*if (b.buffed) {
-                    stats += "1"
-                  } else {
-                    stats += "0"
-                  }*/
                   saving += stats + "\n"
                   }
               }
@@ -90,7 +84,6 @@ object savestate {
             }
             saving += a.armor.toString() + "\n" // armor
             saving += a.damage.toString() + "\n" //damage
-            saving += "\n"
           }
         }
         var bees = ""
@@ -117,12 +110,11 @@ object savestate {
       // General game state
     
     AntsBees.state.purse.money = lines(0).toInt
-    //AntsBees.state.uniqueUnits = lines(1).toInt
-    AntsBees.state.lost = lines(2).toBoolean
-    AntsBees.state.timer = lines(3).toInt
-    AntsBees.state.isQueen = lines(4).toBoolean
-    AntsBees.state.score = lines(5).toInt
-    AntsBees.state.Bullets = Nil
+    AntsBees.state.lost = lines(1).toBoolean
+    AntsBees.state.timer = lines(2).toInt
+    AntsBees.state.isQueen = lines(3).toBoolean
+    AntsBees.state.score = lines(4).toInt
+    AntsBees.state.Bullets = Nil // Flushing out the old bullets
     
     // Creating 4 caves
     
@@ -144,7 +136,7 @@ object savestate {
       
       for (j <- 0 until AntsBees.state.numberTunnels) {
         
-        val tunnelLine = 6 + (3 - i) * 56 + (7 - j) * 7 // Index of the first term of the current tunnel in saves.txt
+        val tunnelLine = 5 + (3 - i) * 48 + (7 - j) * 6 // Index of the first term of the current tunnel in saves.txt
         
         var tunnel = new Tunnel(new Point(cave.width * j, cave.altitude * cave.height + 300), tunnels.head, t0, cave.tunnelIcon) // Default tunnel
         
@@ -195,7 +187,6 @@ object savestate {
               case Some(a) => {
                 ant.armor = lines(tunnelLine + 2).toList.apply(0).asDigit
                 ant.damage = lines(tunnelLine + 2).toList.apply(1).asDigit
-                //ant.buffed = (lines(tunnelLine + 2).toList.apply(2) == "1")
               }
             }
           }
@@ -203,13 +194,12 @@ object savestate {
         if (occupied) {
           ant.armor = lines(tunnelLine + 3).toInt
           ant.damage = lines(tunnelLine + 4).toInt
-          //ant.buffed = lines(tunnelLine + 5).toBoolean
           tunnel.ant = Some(ant)
         }
         
         // Adding in bees
         
-        for (a <- lines(tunnelLine + 6).toList) {
+        for (a <- lines(tunnelLine + 5).toList) {
           var b = new Bee(tunnel)
           b.armor = a.asDigit
           tunnel.bees = b :: tunnel.bees
