@@ -84,7 +84,11 @@ object savestate {
             saving += a.buffed.toString() + "\n"
           }
         }
-        saving += tunnel.bees.length + "\n" // number of bees
+        var bees = ""
+        for (b <- tunnel.bees) {
+          bees += b.armor.toString
+        }
+        saving += bees + "\n" // number of bees
       }
     }
     
@@ -188,8 +192,9 @@ object savestate {
         
         // Adding in bees
         
-        for (k <- 0 until lines(tunnelLine + 5).toInt) {
-          val b = new Bee(tunnel)
+        for (a <- lines(tunnelLine + 5).toList) {
+          var b = new Bee(tunnel)
+          b.armor = a.asDigit
           tunnel.bees = b :: tunnel.bees
         }
         
