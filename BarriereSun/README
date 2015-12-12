@@ -1,0 +1,62 @@
+Prog 1 : Ants VS Bees 
+Aurèle Barrière and Rémy Sun
+
+In this directory you will find our project. 
+
+The Game :
+You are controlling an ant colony under the attack of many bees.
+You will have to put ants on the tunnels so they can try to push the attacker away. 
+You will have some food (initially 10) and every ant has a cost.
+The game is turned-based (one turn per second).
+
+The bees :
+They will come randomly in the tunnels. They simply go to the left of the screen or attack any ant that blocks their way.
+They have an armor of 2
+
+The ants :
+Harvester ant => each turn, produces 1 food. 
+cost 2 / armor 1
+
+Thrower ant => each turn, fires a little rock that damage the bees.
+cost 6 / armor 1
+
+Short Thrower ant => fires a rock if it is close enough
+cost 3 / armor 1
+
+Long Thrower ant => fires arock if is far enough
+cost 3 / armor 1
+
+Fire ant => when it dies, it explodes with all the bees in the same place
+cost 6 / armor 3
+
+Scuba ant => same as the Thrower ant, but can go in flooded tunnels
+cost 8 / armor 1
+
+Wall ant => never attack bees, but is resistant
+cost 4 / armor 4
+
+Ninja ant => can never be damaged by bees, attack one of the bees in its place each turn
+cost 10 / armor 1(never reduced)
+
+Hungry ant => can eat a whole bee (randomly regenerating armor when it happens), then has to wait 3 turns for digestion
+cost 5 / armor 3
+
+Bodyguard => can be put in the same place as another ant to improve its armor
+cost 3 / armor 2
+
+Queen => there can be only one queen. All ants put after the queen will have its damage doubled.
+cost 300 /  armor 2
+
+Losing :
+When a bee goes through the last tunnel or when the queen die, the ant colony is lost. Food drops down to 0 (the ants are buzy fleeing and cannot be placed anymore), the ninjas disappear and the other ants already on the tunnels can try to survive.
+
+Winning :
+There is no way to win this game, bees will always spawn. However, a great battle is more honorable. Each time you kill a bee, your score increases. It is possible to kill more than 3000 bees. Can you do more?
+
+How to play :
+Select a cell and then a tunnel to add an ant. 
+You can also select a cell by pressing the a key (use the second and third rows of an azerty keyboard).
+On the top-right corner, you will see your food and your score.
+You can press 'n' to skip the animation and directly go to the next turn.
+You can press 'a' to save your game, then 'z' to load it. There might still be some bugs with this feature.
+
